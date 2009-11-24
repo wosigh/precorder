@@ -1,8 +1,9 @@
+var filename = "testvideo"
 function RecordAssistant() {
 }
 
 RecordAssistant.prototype.setup = function() {
-    this.recordingStarted = this.recordingStarted.bind(this);
+  //this.recordingStarted = this.recordingStarted.bind(this);
     this.recordFailure = this.recordFailure.bind(this);
     this.recordingStopped = this.recordingStopped.bind(this);
     this.stopFailure = this.stopFailure.bind(this);
@@ -20,6 +21,7 @@ RecordAssistant.prototype.setup = function() {
 };
 
 RecordAssistant.prototype.activate = function(event) {
+    this.recordingStarted();
     this.controller.serviceRequest('palm://org.webosinternals.gstservice', {
         method: 'videoRec',
         parameters: {
@@ -30,7 +32,6 @@ RecordAssistant.prototype.activate = function(event) {
             flash: prefs.flash,
             filename: filename
         },
-        onSuccess: this.recordingStarted,
         onFailure: this.recordFailure,
         onError: this.recordFailure
     });
@@ -39,7 +40,7 @@ RecordAssistant.prototype.activate = function(event) {
 RecordAssistant.prototype.recordingStarted = function(msg) {
     this.stopModel.disabled = false;
     this.controller.modelChanged(this.stopModel);
-    $("messages").innerHTML += "Recording...<br>" + msg.output;
+    $("messages").innerHTML += "Recording...<br>";
     // start time
 };
 

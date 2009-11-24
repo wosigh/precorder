@@ -50,8 +50,8 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Container"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: "MP4", value: "MP4"},
-                    {label: "3GP", value: "3GP"}
+                    {label: "mp4", value: "mp4"},
+                    {label: "3gp", value: "3gp"}
                     ]
             },
             this.containerModel = {

@@ -1,10 +1,11 @@
 {
   "id":"org.webosinternals.precorder",
-  "version":"0.2.3",
+  "version":"0.3.0",
+  "release_date": "25-Nov-2009",
   "title":"Precorder",
   "vendor":"Zsoc",
   "vendor_email":"precorder.webosinternals@gmail.com",
-  "vendor_url":"http://webos-internals.org",
+  "vendor_url":"http://www.webos-internals.org/wiki/Application:Precorder",
   "main":"index.html",
   "icon":"icon.png",
   "miniicon":"miniicon.png",

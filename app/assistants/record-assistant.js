@@ -7,6 +7,7 @@ RecordAssistant.prototype.setup = function() {
     this.recordFailure = this.recordFailure.bind(this);
     this.recordingStopped = this.recordingStopped.bind(this);
     this.stopFailure = this.stopFailure.bind(this);
+    this.stop = this.stop.bindAsEventListener(this);
     
     this.controller.setupWidget("stop", 
                 { 
@@ -16,8 +17,7 @@ RecordAssistant.prototype.setup = function() {
                     buttonLabel : $L("Stop Recording"), 
                     disabled: true 
                 }); 
-    this.controller.listen('stop', Mojo.Event.tap, 
-               this.stop.bindAsEventListener(this));   
+    this.controller.listen('stop', Mojo.Event.tap, this.stop);
 };
 
 RecordAssistant.prototype.activate = function(event) {
@@ -29,7 +29,7 @@ RecordAssistant.prototype.activate = function(event) {
             video: prefs.video,
             container: prefs.container,
             stream: prefs.stream,
-            flash: prefs.flash,
+            brightness: prefs.LED,
             filename: filename
         },
         onFailure: this.recordFailure,
@@ -71,4 +71,5 @@ RecordAssistant.prototype.deactivate = function(event) {
 };
 
 RecordAssistant.prototype.cleanup = function(event) {
+    this.controller.stopListening('stop', Mojo.Event.tap, this.stop);
 };

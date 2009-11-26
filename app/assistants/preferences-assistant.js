@@ -10,9 +10,9 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Audio format"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: "AAC", value: "AAC"},
-                    {label: "AMRNB", value: "AMRNB"},
-                    {label: "MP3", value: "MP3"}
+                    {label: $L("AAC"), value: "AAC"},
+                    {label: $L("AMRNB"), value: "AMRNB"},
+                    {label: $L("MP3"), value: "MP3"}
                     ]
             },
             this.audioModel = {
@@ -30,9 +30,9 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Video format"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: "MPEG-4", value: "MPEG-4"},
-                    {label: "H.263", value: "H.263"},
-                    {label: "H.264/AVC", value: "H.264/AVC"}
+                    {label: $L("MPEG-4"), value: "MPEG-4"},
+                    {label: $L("H.263"), value: "H.263"},
+                    {label: $L("H.264/AVC"), value: "H.264/AVC"}
                     ]
             },
             this.videoModel = {
@@ -50,8 +50,8 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Container"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: "mp4", value: "mp4"},
-                    {label: "3gp", value: "3gp"}
+                    {label: $L("mp4"), value: "mp4"},
+                    {label: $L("3gp"), value: "3gp"}
                     ]
             },
             this.containerModel = {
@@ -69,9 +69,9 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Media source"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: "Audio only", value: "audio"},
-                    {label: "Video only", value: "video"},
-                    {label: "Both", value: "both"}
+                    {label: $L("Audio only"), value: "audio"},
+                    {label: $L("Video only"), value: "video"},
+                    {label: $L("Both"), value: "both"}
                     ]
             },
             this.streamModel = {
@@ -84,15 +84,25 @@ PreferencesAssistant.prototype.setup = function() {
     Mojo.Event.listen(this.controller.get("stream-options"),
                       Mojo.Event.propertyChange, this.optionChanged);
 
-    this.controller.setupWidget('flash-toggle',
-                                {},
-                                this.flashModel = {
-                                    value: prefs.flash,
-                                    optionName: "flash",
-                                    disabled: false
-                                });
-    
-    Mojo.Event.listen(this.controller.get('flash-toggle'),
+    this.controller.setupWidget("LED-options",
+            {
+                label: $L("Video Light"),
+                labelPlacement: Mojo.Widget.labelPlacementLeft,
+                choices: [
+                    {label: $L("Off"), value: "off"},
+                    {label: $L("Low"), value: "low"},
+                    {label: $L("Medium"), value: "medium"},
+                    {label: $L("High"), value: "high"}
+                    ]
+            },
+            this.LEDModel = {
+                value: prefs.LED,
+                optionName: "LED",
+                disabled: false
+            }
+        );
+
+    Mojo.Event.listen(this.controller.get("LED-options"),
                       Mojo.Event.propertyChange, this.optionChanged);
 
     } catch(err) { Mojo.Log.error("err: %j", err); }
@@ -110,4 +120,14 @@ PreferencesAssistant.prototype.deactivate = function(event) {
 };
 
 PreferencesAssistant.prototype.cleanup = function(event) {
+    Mojo.Event.stopListening(this.controller.get("audio-options"),
+        Mojo.Event.propertyChange, this.optionChanged)
+    Mojo.Event.stopListening(this.controller.get("video-options"),
+        Mojo.Event.propertyChange, this.optionChanged)
+    Mojo.Event.stopListening(this.controller.get("container-options"),
+        Mojo.Event.propertyChange, this.optionChanged)
+    Mojo.Event.stopListening(this.controller.get("stream-options"),
+        Mojo.Event.propertyChange, this.optionChanged)
+    Mojo.Event.stopListening(this.controller.get("LED-options"),
+        Mojo.Event.propertyChange, this.optionChanged)
 };

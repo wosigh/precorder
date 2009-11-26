@@ -8,7 +8,7 @@ var prefs = {
                 video: "H.264/AVC",
                 container: "mp4",
                 stream: "both",
-                flash: false,
+                LED: "off",
                 firstUse: true
     },
 

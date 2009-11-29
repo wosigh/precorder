@@ -121,13 +121,13 @@ PreferencesAssistant.prototype.deactivate = function(event) {
 
 PreferencesAssistant.prototype.cleanup = function(event) {
     Mojo.Event.stopListening(this.controller.get("audio-options"),
-        Mojo.Event.propertyChange, this.optionChanged)
+        Mojo.Event.propertyChange, this.optionChanged);
     Mojo.Event.stopListening(this.controller.get("video-options"),
-        Mojo.Event.propertyChange, this.optionChanged)
+        Mojo.Event.propertyChange, this.optionChanged);
     Mojo.Event.stopListening(this.controller.get("container-options"),
-        Mojo.Event.propertyChange, this.optionChanged)
+        Mojo.Event.propertyChange, this.optionChanged);
     Mojo.Event.stopListening(this.controller.get("stream-options"),
-        Mojo.Event.propertyChange, this.optionChanged)
+        Mojo.Event.propertyChange, this.optionChanged);
     Mojo.Event.stopListening(this.controller.get("LED-options"),
-        Mojo.Event.propertyChange, this.optionChanged)
+        Mojo.Event.propertyChange, this.optionChanged);
 };

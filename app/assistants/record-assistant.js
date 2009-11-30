@@ -29,8 +29,8 @@ RecordAssistant.prototype.handleCommand = function(event) {
             this.controller.serviceRequest('palm://org.webosinternals.gstservice', {
                 method: 'videoStop',
                 onSuccess: this.recordingStopped,
-                onFailure: this.recordingStopped,
-                onError: this.recordingStopped
+                onFailure: this.stopFailure,
+                onError: this.stopFailure
             });
             
         }
@@ -77,15 +77,16 @@ RecordAssistant.prototype.stop = function(event) {
     });
 };
 
-RecordAssistant.prototype.recordingStopped = function(event) {
+RecordAssistant.prototype.recordingStopped = function(response) {
     videoRecording = false;
-    Mojo.Controller.stageController.popScene();
+    Mojo.Controller.stageController.popScene(response.path);
 };
 
 RecordAssistant.prototype.stopFailure = function(response) {
     videoRecording = false;  // We'll be unlikely to stop it now anyhow
     $("messages").innerHTML += "Stop failed:<br>" + response.errorText;
     // pop up error dialog then pop scene
+    Mojo.Controller.stageController.popScene();
 };
 
 RecordAssistant.prototype.deactivate = function(event) {

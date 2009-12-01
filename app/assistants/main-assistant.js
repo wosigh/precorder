@@ -36,7 +36,7 @@ MainAssistant.prototype.launch = function(event) {
     var p = {};
     
     if(this.lastVideo)
-        p = {target: "file://" + this.lastVideo};
+        p = {target: "file://media/internal/video/" + this.lastVideo};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
         method: 'launch',

@@ -20,7 +20,7 @@ MainAssistant.prototype.setup = function() {
                 { 
                     disabledProperty: 'disabled' 
                 }, 
-                { 
+                this.launchModel = { 
                     buttonLabel : $L("Launch Video Player"), 
                     disabled: false 
                 }); 
@@ -32,17 +32,28 @@ MainAssistant.prototype.record = function(event) {
     Mojo.Controller.stageController.pushScene("record");
 };
 
-MainAssistant.prototype.launch = function(event) {  
+MainAssistant.prototype.launch = function(event) {
+    var p = {};
+    
+    if(this.lastVideo)
+        p = {target: "file://" + this.lastVideo};
+        
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
         method: 'launch',
         parameters: {
             id: "com.palm.app.videoplayer",
-            params:{}
+            params: p
         }
     });
 };
 
-MainAssistant.prototype.activate = function(event) {
+MainAssistant.prototype.activate = function(lastFilename) {
+    if(lastFilename)
+    {
+        this.lastVideo = lastFilename;
+        this.launchModel.buttonLabel = $L("Launch Last Video");
+        this.controller.modelChanged(this.launchModel);
+    }
 };
 
 MainAssistant.prototype.deactivate = function(event) {

@@ -1,10 +1,11 @@
 function StageAssistant() {
+    videoRecording = false;
 }
 
 StageAssistant.prototype.setup = function() {
     prefs.load();
     this.controller.pushScene("main");
-}
+};
 
 StageAssistant.prototype.handleCommand = function (event) {
     var currentScene = this.controller.activeScene();

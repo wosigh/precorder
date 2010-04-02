@@ -3,7 +3,7 @@
   "version":"0.3.4",
   "release_date": "30-Dec-2009",
   "title":"Precorder",
-  "vendor":"Zsoc",
+  "vendor":"webos-internals",
   "vendor_email":"precorder.webosinternals@gmail.com",
   "vendor_url":"http://www.webos-internals.org/wiki/Application:Precorder",
   "main":"index.html",

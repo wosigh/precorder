@@ -5,6 +5,14 @@ MainAssistant.prototype.setup = function() {
     this.record = this.record.bindAsEventListener(this);
     this.launch = this.launch.bindAsEventListener(this);
     
+    // Specifying the width in pixels is a hack.  The widget should support percentages.
+		this.topMenuModelItems = [
+			{label:'Microphone / Stream Monitor', toggleCmd:selectedView, items:[
+				{label:$L('Microphone'), command:this.COMMAND_MENU.loadHistoryView.command, width:160},
+				{label:$L('Stream Monitor'), command:this.COMMAND_MENU.loadBuddyView.command, width:160}
+			]}
+		];
+    
     this.controller.setupWidget("record", 
                 { 
                     disabledProperty: 'disabled' 

@@ -2,8 +2,8 @@
     {"source": "app/assistants/stage-assistant.js"},
     {"source": "app/models/prefs.js"},
     {
-        "scenes": "main",
-        "source": "app/assistants/main-assistant.js"
+        "scenes": "mic-rec",
+        "source": "app/assistants/mic-rec-assistant.js"
     },
     {
         "scenes": "preferences",
@@ -11,6 +11,6 @@
     },
     {
         "scenes": "record",
-        "source": "app/assistants/record-assistant.js"
+        "source": "app/assistants/stream-rec-assistant.js"
     }
 ]

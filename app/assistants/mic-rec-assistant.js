@@ -1,7 +1,7 @@
-function MainAssistant(){
+function MicRecAssistant(){
 }
 
-MainAssistant.prototype.setup = function() {
+MicRecAssistant.prototype.setup = function() {
 	
 	// viewMenuModel is a global defined in stage-assistant.js
 	this.controller.setupWidget(Mojo.Menu.viewMenu, {spacerHeight: 0, menuClass:"no-fade"}, viewMenuModel);
@@ -14,7 +14,7 @@ MainAssistant.prototype.setup = function() {
                     disabledProperty: 'disabled' 
                 }, 
                 { 
-                    buttonLabel : $L("Record New"), 
+                    buttonLabel : $L("Record"), 
                     disabled: false 
                 });
     this.controller.listen('record', Mojo.Event.tap, 
@@ -25,52 +25,52 @@ MainAssistant.prototype.setup = function() {
                     disabledProperty: 'enabled' 
                 }, 
                 { 
-                    buttonLabel : $L("Record New"), 
+                    buttonLabel : $L("Stop"), 
                     disabled: true 
                 });
     this.controller.listen('stop', Mojo.Event.tap, 
-               this.record);
+               this.stop);
 
-    /*this.controller.setupWidget("launch", 
+    this.controller.setupWidget("play", 
                 { 
-                    disabledProperty: 'disabled' 
+                    disabledProperty: 'enabled' 
                 }, 
                 this.launchModel = { 
-                    buttonLabel : $L("Launch Video Player"), 
-                    disabled: false 
+                    buttonLabel : $L("Play"), 
+                    disabled: true 
                 }); 
-    this.controller.listen('launch', Mojo.Event.tap, 
-               this.launch);*/
+    this.controller.listen('play', Mojo.Event.tap, 
+               this.play);
 };
 
-MainAssistant.prototype.launch = function(event) {
+MicRecAssistant.prototype.play = function(event) {
     var p = {};
     
-    if(this.lastVideo)
-        p = {target: "file:///media/internal/video/" + this.lastVideo};
+    if(this.lastRecording)
+        p = {target: "file:///media/internal/recordings/" + this.lastRecording};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
         method: 'launch',
         parameters: {
-            id: "com.palm.app.videoplayer",
+            id: "com.palm.app.musicplayer",
             params: p
         }
     });
 };
 
-MainAssistant.prototype.activate = function(lastFilename) {
+MicRecAssistant.prototype.activate = function(lastFilename) {
     if(lastFilename)
     {
-        this.lastVideo = lastFilename;
-        this.launchModel.buttonLabel = $L("Launch Last Video");
-        this.controller.modelChanged(this.launchModel);
+        this.lastRecording = lastFilename;
+        this.playModel.buttonLabel = $L("Play");
+        this.controller.modelChanged(this.playModel);
     }
 };
 
-MainAssistant.prototype.deactivate = function(event) {
+MicRecAssistant.prototype.deactivate = function(event) {
 };
 
-MainAssistant.prototype.cleanup = function(event) {
+MicRecAssistant.prototype.cleanup = function(event) {
     this.controller.stopListening('record', Mojo.Event.tap,
                                   this.record);
     this.controller.stopListening('stop', Mojo.Event.tap, 

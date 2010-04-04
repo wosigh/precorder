@@ -1,4 +1,11 @@
-viewMenuModel = {
+function StageAssistant() {
+    videoRecording = false;
+}
+
+StageAssistant.prototype.setup = function() {
+    prefs.load();
+    this.controller.pushScene("mic-rec");
+	viewMenuModel = {
 		visible: true,
 		items: [
 			{},
@@ -10,14 +17,6 @@ viewMenuModel = {
 			{}
 		]
 	};
-
-function StageAssistant() {
-    videoRecording = false;
-}
-
-StageAssistant.prototype.setup = function() {
-    prefs.load();
-    this.controller.pushScene("mic-rec");
 };
 
 StageAssistant.prototype.handleCommand = function (event) {

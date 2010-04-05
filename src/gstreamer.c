@@ -206,7 +206,7 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
 
 
 
-int record_video(PIPELINE_OPTS_t *opts) {
+int record_start(PIPELINE_OPTS_t *opts) {
 
 	int ret = -1;
 

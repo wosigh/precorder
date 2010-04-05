@@ -12,7 +12,7 @@ StageAssistant.prototype.setup = function() {
 			{toggleCmd: 'mic-rec',
 			items: [
 				{label: $L("Microphone"), command: 'mic-rec', width: 160},
-				{label: $L("Stream Record"), command: 'stream-rec', width: 160}
+				{label: $L("Output Monitor"), command: 'output-rec', width: 160}
 				] },
 			{}
 		]

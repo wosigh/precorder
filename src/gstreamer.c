@@ -259,7 +259,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	gst_element_link_filtered(psrc, vact, acaps);
 	gst_element_link_many(aenc, fsink, NULL);
 
-	bus = gst_element_get_bus (level);
+	bus = gst_element_get_bus (vact);
 	watch_id = gst_bus_add_watch (bus, message_handler, NULL);
 
 	int state;

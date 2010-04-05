@@ -256,7 +256,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	);
 
 	// Link elements
-	gst_element_link_filtered(psrc, vact, aenc);
+	gst_element_link_filtered(psrc, vact, aenc, acaps);
 	gst_element_link(fsink, NULL);
 
 	bus = gst_element_get_bus (precorder);

@@ -25,7 +25,7 @@
 #include <sched.h>
 
 #include "precorderD.h"
-#include "gstreamer.h"
+#include "precorder.h"
 #include "misc.h"
 
 char *tmpDir;

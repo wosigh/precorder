@@ -9,7 +9,7 @@ CC=/srv/preware/build/toolchain/i686-unknown-linux-gnu/build/i686-unknown-linux-
 CFLAGS := -g -DVERSION=\"${VERSION}\" -I${STAGING_DIR}/usr/include/glib-2.0 -I${STAGING_DIR}/usr/lib/glib-2.0/include -I${STAGING_DIR}/usr/include/gstreamer-0.10 -I${STAGING_DIR}/usr/include/libxml2 -I${STAGING_DIR}/usr/include
 LDFLAGS  := -g -L${STAGING_DIR}/usr/lib -llunaservice -lmjson -lglib-2.0 -lgstreamer-0.10
 
-precorder: gstreamer.o lunaservice.o main.o misc.o
+precorder: precorder.o lunaservice.o main.o misc.o
 
 install: precorder
 	- ssh root@webos killall org.webosinternals.saverestore

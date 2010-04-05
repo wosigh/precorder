@@ -22,7 +22,7 @@
 #include <sched.h>
 
 #include "precorderD.h"
-#include "gstreamer.h"
+#include "precorder.h"
 #include "luna.h"
 
 pthread_mutex_t recording_mutex = PTHREAD_MUTEX_INITIALIZER;

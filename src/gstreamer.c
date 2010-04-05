@@ -259,7 +259,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	gst_element_link_filtered(psrc, vact, acaps);
 	gst_element_link_many(aenc, fsink, NULL);
 
-	bus = gst_element_get_bus (precorder);
+	bus = gst_element_get_bus (level);
 	watch_id = gst_bus_add_watch (bus, message_handler, NULL);
 
 	int state;
@@ -267,7 +267,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
 		// run sync'ed so it doesn't trip over itself
-		g_object_set (G_OBJECT (filesink), "sync", TRUE, NULL);
+		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
 		while (gst_app_sink_is_eos() == FALSE) {
 			if ((rms >= 0.2) && (state != 1)) {
 				gst_element_set_state(pipeline, GST_STATE_PLAYING);

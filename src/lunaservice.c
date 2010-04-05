@@ -23,12 +23,11 @@
 
 #include "precorderD.h"
 #include "gstreamer.h"
-#include "TPS6105X.h"
 #include "luna.h"
 
 pthread_mutex_t recording_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void *record_video_wrapper(void *ptr) {
+void *record_wrapper(void *ptr) {
 
 	RECORD_REQUEST_t *req = (RECORD_REQUEST_t *)ptr;
 
@@ -115,7 +114,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_free_value(&root);
 
 	pthread_t record_thread;
-	pthread_create(&record_thread, NULL, record_video_wrapper, req);
+	pthread_create(&record_thread, NULL, record_wrapper, req);
 
 	return TRUE;
 

@@ -29,7 +29,7 @@ MicRecAssistant.prototype.activate = function() {
 MicRecAssistant.prototype.record = function(event) {
 	this.recordingStarted();
     this.controller.serviceRequest('palm://org.webosinternals.precorder', {
-        method: 'record_start',
+        method: 'start_record',
         parameters: {
             source_device: prefs.source_device,
             stream_rate: prefs.stream_rate,
@@ -44,7 +44,7 @@ MicRecAssistant.prototype.record = function(event) {
 };
 
 RecordAssistant.prototype.recordingStarted = function(msg) {
-    videoRecording = true;
+    currentRecording = true;
 	this.recordModel.disabled = true;
     this.controller.modelChanged(this.recordModel);
     this.stopModel.disabled = false;
@@ -54,14 +54,14 @@ RecordAssistant.prototype.recordingStarted = function(msg) {
 };
 
 RecordAssistant.prototype.recordFailure = function(response) {
-    videoRecording = false;
+    currentRecording = false;
     $("messages").innerHTML += "Recording failed:<br>" + response.errorText;
     // pop up error dialog then pop scene
 };
 
 MicRecAssistant.prototype.stop = function(event, lastFilename) {
 		this.controller.serviceRequest('palm://org.webosinternals.gstservice', {
-        	method: 'videoStop',
+        	method: 'stop_record',
         	onSuccess: this.recordingStopped,
         	onFailure: this.stopFailure,
         	onError: this.stopFailure
@@ -79,11 +79,11 @@ RecordAssistant.prototype.recordingStopped = function(response) {
     this.controller.modelChanged(this.recordModel);
 	this.stopModel.disabled = true;
     this.controller.modelChanged(this.stopModel);
-    videoRecording = false;
+    currentRecording = false;
 };
 
 RecordAssistant.prototype.stopFailure = function(response) {
-    videoRecording = false;  // Might as well, can't stop it now anyway
+    currentRecording = false;  // Might as well, can't stop it now anyway
     $("messages").innerHTML += "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
 };
 

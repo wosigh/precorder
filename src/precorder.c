@@ -25,10 +25,12 @@
 
 GstElement *pipeline;
 gdouble rms;
+int is_eos = 0;
 
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 	bool quit_recording_loop = FALSE;
+	extern int is_eos;
 
 	int len = 0;
 	char *message = 0;
@@ -40,6 +42,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	case GST_MESSAGE_UNKNOWN:
 		break;
 	case GST_MESSAGE_EOS:
+		is_eos = 1;
 		break;
 	case GST_MESSAGE_ERROR: {
 		gchar *debug;
@@ -173,6 +176,7 @@ void gst_object_deep_notify(GObject *object, GstObject *orig, GParamSpec *pspec,
 
 gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
 {
+  extern gdouble rms;
   // handle only element messages
   if (message->type == GST_MESSAGE_ELEMENT) {
     const GstStructure *s = gst_message_get_structure (message);
@@ -212,7 +216,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	GstElement *psrc, *vact, *aenc, *fsink;
 	GstCaps *acaps;
-	GstBus *bus;
+	GstBus *bus, *level_bus;
 	gint watch_id;
 	extern gdouble rms;
 
@@ -259,8 +263,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	gst_element_link_filtered(psrc, vact, acaps);
 	gst_element_link_many(aenc, fsink, NULL);
 
-	bus = gst_element_get_bus (vact);
-	watch_id = gst_bus_add_watch (bus, message_handler, NULL);
+	level_bus = gst_element_get_bus (vact);
+	watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);
 
 	int state;
 	state = 1;
@@ -268,7 +272,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
 		// run sync'ed so it doesn't trip over itself
 		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
-		while (gst_app_sink_is_eos() == FALSE) {
+		while (is_eos == 0) {
 			if ((rms >= 0.2) && (state != 1)) {
 				gst_element_set_state(pipeline, GST_STATE_PLAYING);
 				state = 1;
@@ -290,6 +294,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	//g_signal_connect(pipeline, "deep_notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
 
 	gst_object_unref(bus);
+
+	gst_object_unref(level_bus);
 
 	g_main_loop_run(recording_loop);
 

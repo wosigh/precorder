@@ -2,6 +2,15 @@
 
 PID="org.webosinternals.precorderD"
 
+MP3LAMESYM="/usr/lib/libmp3lame.so"
+GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"
+GSTLEVELSYM="/usr/lib/gstreamer-0.10/libgstlevel-webosinternals.so"
+
+# Remove all symlinks
+rm -f $MP3LAMESYM
+rm -f $GSTLAMESYM
+rm -f $GSTLEVELSYM
+
 # Stop the service
 /sbin/stop ${PID}
 
@@ -9,3 +18,14 @@ PID="org.webosinternals.precorderD"
 rm -f /etc/event.d/${PID}
 
 exit 0
+
+
+
+
+
+
+
+
+
+
+

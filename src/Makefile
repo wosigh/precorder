@@ -7,7 +7,7 @@ CC=/srv/preware/build/toolchain/i686-unknown-linux-gnu/build/i686-unknown-linux-
 # CC=/opt/PalmPDK/arm-gcc/bin/arm-none-linux-gnueabi-gcc
 
 CFLAGS := -g -DVERSION=\"${VERSION}\" -I${STAGING_DIR}/usr/include/glib-2.0 -I${STAGING_DIR}/usr/lib/glib-2.0/include -I${STAGING_DIR}/usr/include/gstreamer-0.10 -I${STAGING_DIR}/usr/include/libxml2 -I${STAGING_DIR}/usr/include
-LDFLAGS  := -g -L${STAGING_DIR}/usr/lib -llunaservice -lmjson -lglib-2.0 -lgstreamer-0.10
+LDFLAGS  := -g -L${STAGING_DIR}/usr/lib -llunaservice -lmjson -lglib-2.0 -lgmodule-2.0 -lgthread-2.0 -lgobject-2.0 -lgstreamer-0.10 -lz -lxml2
 
 precorder: precorder.o lunaservice.o main.o misc.o
 

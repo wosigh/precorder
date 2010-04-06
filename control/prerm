@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PID="org.webosinternals.precorderD"
+PID="org.webosinternals.precorder"
 
 MP3LAMESYM="/usr/lib/libmp3lame.so"
 GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"

@@ -21,7 +21,7 @@
 
 #include <lunaservice.h>
 
-#define SERVICE_URI				"org.webosinternals.precorderD"
+#define SERVICE_URI				"org.webosinternals.precorder"
 
 typedef struct {
 	PIPELINE_OPTS_t *opts;

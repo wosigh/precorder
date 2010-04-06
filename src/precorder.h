@@ -19,10 +19,18 @@
 #ifndef GSTREAMER_H_
 #define GSTREAMER_H_
 
+#ifndef PRECORDER_H_
+#define PRECORDER_H_
+
+#define DEFAULT_FILE_LOCATION	"/media/internal/recordings"
+
 #include <limits.h>
 #include <stdbool.h>
 #include <pthread.h>
 #include <glib.h>
+
+
+#endif /* PRECORDER_H_ */
 
 /*!
  * \brief Possible source devices for

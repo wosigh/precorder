@@ -2,5 +2,5 @@ start on stopped finish
 
 console output
 
-exec /var/usr/bin/org.webosinternals.precorderD
+exec /var/usr/bin/org.webosinternals.precorder
 respawn

@@ -24,7 +24,6 @@
 #include <string.h>
 #include <sched.h>
 
-#include "precorderD.h"
 #include "precorder.h"
 #include "misc.h"
 
@@ -37,7 +36,7 @@ static struct option long_options[] = {
 };
 
 void print_version() {
-	printf("precorderD - precorder service daemon (%s)\n", VERSION);
+	printf("precorder - precorder service daemon (%s)\n", VERSION);
 }
 
 void print_help(char *argv[]) {

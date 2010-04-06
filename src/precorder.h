@@ -16,15 +16,14 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  =============================================================================*/
 
-#ifndef GSTREAMER_H_
-#define GSTREAMER_H_
-#endif
-
 #ifndef PRECORDER_H_
 #define PRECORDER_H_
-#endif /* PRECORDER_H_ */
 
 #define DEFAULT_FILE_LOCATION	"/media/internal/recordings"
+#endif /* PRECORDER_H_ */
+
+#ifndef GSTREAMER_H_
+#define GSTREAMER_H_
 
 #include <limits.h>
 #include <stdbool.h>

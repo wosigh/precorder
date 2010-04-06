@@ -1,6 +1,6 @@
 #!/bin/sh                                                                                       
 
-PID="us.webosinternals.precorderD"
+PID="org.webosinternals.precorderD"
 
 MP3LAME="bin/libmp3lame.so"
 GSTLAME="bin/libgstlame.so"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PID="us.ryanhope.precorderD"
+PID="org.webosinternals.precorderD"
 
 # Stop the service
 /sbin/stop ${PID}

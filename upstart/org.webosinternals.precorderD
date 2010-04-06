@@ -2,5 +2,5 @@ start on stopped finish
 
 console output
 
-exec /var/usr/bin/us.ryanhope.precorderD
+exec /var/usr/bin/org.webosinternals.precorderD
 respawn

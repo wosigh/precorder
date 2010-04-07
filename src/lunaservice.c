@@ -85,8 +85,8 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	json_get_string(object, "source_device", &source_device);
 	json_get_string(object, "filename", &filename);
-	json_get_int(object, "stream_rate", &lame_bitrage);
-	json_get_int(object, "lame_bitrate", &lame_bitrage);
+	json_get_int(object, "stream_rate", &stream_rate);
+	json_get_int(object, "lame_bitrate", &lame_bitrate);
 	json_get_int(object, "lame_quality", &lame_quality);
 	json_get_bool(object, "voice_activation", &voice_activation);
 
@@ -108,20 +108,20 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 		sprintf(req->opts->file, "%s/%s.%s", DEFAULT_FILE_LOCATION, filename, extension);
 	}
 
-	req->opts->source_device		= source_device?atoi(source_device->child->text):SOURCE_DEVICE_MIC;
+	req->opts->source_device		= source_device?source_device:SOURCE_DEVICE_MIC;
 
-	req->opts->stream_rate		= stream_rate?atoi(stream_rate->child->text):16000;
+	req->opts->stream_rate		= stream_rate?stream_rate:16000;
 	//req->opts->channels			= channels?atoi(channels->child->text):1;
 	//req->opts->endianness		= endianness?atoi(endianness->child->text):1234;
 
 	//req->opts->width		= width?atoi(width->child->text):16;
 	//req->opts->depth		= depth?atoi(depth->child->text):16;
-	req->opts->lame_bitrate		= lame_bitrate?atoi(lame_bitrate->child->text):96;
-	req->opts->lame_quality		= lame_quality?atoi(lame_quality->child->text):6;
+	req->opts->lame_bitrate		= lame_bitrate?lame_bitrate:96;
+	req->opts->lame_quality		= lame_quality?lame_quality:6;
 
-	req->opts->voice_activation		= voice_activation?atoi(voice_activation->child->text):VOICE_ACTIVATION_NO;
+	req->opts->voice_activation		= voice_activation?voice_activation:VOICE_ACTIVATION_NO;
 
-	json_free_value(&root);
+	json_free_value(&object);
 
 	pthread_t record_thread;
 	pthread_create(&record_thread, NULL, record_wrapper, req);

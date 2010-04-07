@@ -66,7 +66,10 @@ void *record_wrapper(void *ptr) {
 bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	LSMessageRef(message);
-
+	char timestamp[16];
+	get_timestamp_string(timestamp);
+	char *extension;
+	extension = "mp3";
 	RECORD_REQUEST_t *req = malloc(sizeof(RECORD_REQUEST_t));
 	req->opts = malloc(sizeof(PIPELINE_OPTS_t));
 	req->message = message;
@@ -83,6 +86,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_t *lame_quality			= json_find_first_label(root, "lame_quality");
 	json_t *voice_activation		= json_find_first_label(root, "voice_activation");
 	json_t *filename				= json_find_first_label(root, "filename");
+
 	if (!filename) {
 		sprintf(req->opts->file, "%s/precorder_%s.%s", DEFAULT_FILE_LOCATION, timestamp, extension);
 	}
@@ -90,20 +94,14 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 		sprintf(req->opts->file, "%s/%s.%s", DEFAULT_FILE_LOCATION, filename, extension);
 	}
 
-	char *extension;
-	extension = "mp3";
-
-	char timestamp[16];
-	get_timestamp_string(timestamp);
-
 	req->opts->source_device		= source_device?atoi(source_device->child->text):SOURCE_DEVICE_MIC;
 
 	req->opts->stream_rate		= stream_rate?atoi(stream_rate->child->text):16000;
-	req->opts->channels			= channels?atoi(channels->child->text):1;
-	req->opts->endianness		= endianness?atoi(endianness->child->text):1234;
+	//req->opts->channels			= channels?atoi(channels->child->text):1;
+	//req->opts->endianness		= endianness?atoi(endianness->child->text):1234;
 
-	req->opts->width		= width?atoi(width->child->text):16;
-	req->opts->depth		= depth?atoi(depth->child->text):16;
+	//req->opts->width		= width?atoi(width->child->text):16;
+	//req->opts->depth		= depth?atoi(depth->child->text):16;
 	req->opts->lame_bitrate		= lame_bitrate?atoi(lame_bitrate->child->text):96;
 	req->opts->lame_quality		= lame_quality?atoi(lame_quality->child->text):6;
 

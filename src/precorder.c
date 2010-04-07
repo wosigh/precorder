@@ -68,8 +68,8 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	case GST_MESSAGE_BUFFERING:
 		break;
 	case GST_MESSAGE_STATE_CHANGED: {
-		GstState *oldState, *newState, *pendingState;
-		gst_message_parse_state_changed(msg, oldState, newState, pendingState);
+		GstState oldState, newState, pendingState;
+		gst_message_parse_state_changed(msg, &oldState, &newState, &pendingState);
 		asprintf(&message, "Old state: %d, New state: %d, Pending state: %d", oldState, newState, pendingState);
 		break;
 	}

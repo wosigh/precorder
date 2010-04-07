@@ -74,18 +74,32 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	req->opts = malloc(sizeof(PIPELINE_OPTS_t));
 	req->message = message;
 
-	json_t *root = LSMessageGetPayloadJSON(message);
+	json_t *object = LSMessageGetPayloadJSON(message);
 
-	json_t *source_device			= json_find_first_label(root, "source_device");
-	json_t *stream_rate				= json_find_first_label(root, "stream_rate");
+	char *source_device = 0;
+	int stream_rate = 0;
+	int lame_bitrate = 0;
+	int lame_quality = 0;
+	bool voice_activation = 0;
+	char *filename = 0;
+
+	json_get_string(object, "source_device", &source_device);
+	json_get_string(object, "filename", &filename);
+	json_get_int(object, "stream_rate", &lame_bitrage);
+	json_get_int(object, "lame_bitrate", &lame_bitrage);
+	json_get_int(object, "lame_quality", &lame_quality);
+	json_get_bool(object, "voice_activation", &voice_activation);
+
+	//json_t *source_device			= json_find_first_label(root, "source_device");
+	//json_t *stream_rate				= json_find_first_label(root, "stream_rate");
 	//json_t *channels				= json_find_first_label(root, "channels");
 	//json_t *endianness				= json_find_first_label(root, "endianness");
 	//json_t *width					= json_find_first_label(root, "width");
 	//json_t *depth					= json_find_first_label(root, "depth");
-	json_t *lame_bitrate			= json_find_first_label(root, "lame_bitrate");
-	json_t *lame_quality			= json_find_first_label(root, "lame_quality");
-	json_t *voice_activation		= json_find_first_label(root, "voice_activation");
-	json_t *filename				= json_find_first_label(root, "filename");
+	//json_t *lame_bitrate			= json_find_first_label(root, "lame_bitrate");
+	//json_t *lame_quality			= json_find_first_label(root, "lame_quality");
+	//json_t *voice_activation		= json_find_first_label(root, "voice_activation");
+	//json_t *filename				= json_find_first_label(root, "filename");
 
 	if (!filename) {
 		sprintf(req->opts->file, "%s/precorder_%s.%s", DEFAULT_FILE_LOCATION, timestamp, extension);

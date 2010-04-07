@@ -76,14 +76,14 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	json_t *object = LSMessageGetPayloadJSON(message);
 
-	char *source_device = 0;
+	int source_device = 0;
 	int stream_rate = 0;
 	int lame_bitrate = 0;
 	int lame_quality = 0;
 	bool voice_activation = 0;
 	char *filename = 0;
 
-	json_get_string(object, "source_device", &source_device);
+	json_get_int(object, "source_device", &source_device);
 	json_get_string(object, "filename", &filename);
 	json_get_int(object, "stream_rate", &stream_rate);
 	json_get_int(object, "lame_bitrate", &lame_bitrate);
@@ -108,7 +108,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 		sprintf(req->opts->file, "%s/%s.%s", DEFAULT_FILE_LOCATION, filename, extension);
 	}
 
-	req->opts->source_device		= source_device?source_device:SOURCE_DEVICE_MIC;
+	req->opts->source_device  = source_device?source_device:SOURCE_DEVICE_MIC;
 
 	req->opts->stream_rate		= stream_rate?stream_rate:16000;
 	//req->opts->channels			= channels?atoi(channels->child->text):1;

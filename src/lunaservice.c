@@ -121,7 +121,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	req->opts->voice_activation		= voice_activation?voice_activation:VOICE_ACTIVATION_NO;
 
-	json_free_value(&object);
+	//json_free_value(&object);
 
 	pthread_t record_thread;
 	pthread_create(&record_thread, NULL, record_wrapper, req);

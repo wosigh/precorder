@@ -300,9 +300,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	//g_signal_connect(pipeline, "deep_notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
 
-	gst_object_unref(bus);
+	//gst_object_unref(bus);
 
-	gst_object_unref(level_bus);
+	//gst_object_unref(level_bus);
 
 	g_main_loop_run(recording_loop);
 

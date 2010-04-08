@@ -265,20 +265,19 @@ int record_start(PIPELINE_OPTS_t *opts) {
 			NULL
 	);
 
-	// Link elements
-	gst_element_link_filtered(psrc, vact, acaps);
-	gst_element_link_many(aenc, fsink, NULL);
-
-	level_bus = gst_element_get_bus (vact);
-	watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);
-
 	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
 	gst_bus_add_watch(bus, bus_call, recording_loop);
 
-	int state;
-	state = 1;
-
 	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
+		// Link elements with gstlevel
+		gst_element_link_filtered(psrc, vact, acaps);
+		gst_element_link_many(aenc, fsink, NULL);
+		// Set watch for level element messages
+		level_bus = gst_element_get_bus (vact);
+		watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);
+		int state;
+		state = 1;
+
 		// run sync'ed so it doesn't trip over itself
 		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
 		while (is_eos == 0) {
@@ -293,6 +292,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		}
 	}
 	else {
+		// Link elements without gstlevel
+		gst_element_link_filtered(psrc, aenc, acaps);
+		gst_element_link(fsink, NULL);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 	}
 

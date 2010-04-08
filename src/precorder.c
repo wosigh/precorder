@@ -229,7 +229,13 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	// Setup pulse source
 	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
-	g_object_set(G_OBJECT(psrc), "device", opts->source_device, NULL);
+
+	if (opts->source_device == 1) {
+		g_object_set(G_OBJECT(psrc), "device", "pcm_output.monitor", NULL);
+	}
+	else {
+		g_object_set(G_OBJECT(psrc), "device", "pcm_input", NULL);
+	}
 
 	// Setup audio encoder
 	aenc = gst_element_factory_make("lame", "audio-encoder");
@@ -250,11 +256,11 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	// Build audio caps
 	acaps = gst_caps_new_simple(
 			"audio/x-raw-int",
-			"width",			G_TYPE_INT,		opts->width,
-			"depth",			G_TYPE_INT,		opts->depth,
-			"endianness",		G_TYPE_INT,		opts->endianness,
+			"width",			G_TYPE_INT,		16,
+			"depth",			G_TYPE_INT,		16,
+			"endianness",		G_TYPE_INT,		1234,
 			"rate",				G_TYPE_INT,		opts->stream_rate,
-			"channels",			G_TYPE_INT,		opts->channels,
+			"channels",			G_TYPE_INT,		2,
 			"signed",			G_TYPE_BOOLEAN,	TRUE,
 			NULL
 	);
@@ -266,10 +272,13 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	level_bus = gst_element_get_bus (vact);
 	watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);
 
+	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
+	gst_bus_add_watch(bus, bus_call, recording_loop);
+
 	int state;
 	state = 1;
 
-	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
+	if (opts->voice_activation == 1) {
 		// run sync'ed so it doesn't trip over itself
 		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
 		while (is_eos == 0) {
@@ -286,10 +295,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	else {
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 	}
-
-
-	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
-	gst_bus_add_watch(bus, bus_call, recording_loop);
 
 	//g_signal_connect(pipeline, "deep_notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
 

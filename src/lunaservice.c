@@ -80,7 +80,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	int stream_rate = 0;
 	int lame_bitrate = 0;
 	int lame_quality = 0;
-	bool voice_activation = 0;
+	int voice_activation = 0;
 	char *filename = 0;
 
 	json_get_int(object, "source_device", &source_device);
@@ -90,17 +90,6 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_get_int(object, "lame_quality", &lame_quality);
 	json_get_bool(object, "voice_activation", &voice_activation);
 
-	//json_t *source_device			= json_find_first_label(root, "source_device");
-	//json_t *stream_rate				= json_find_first_label(root, "stream_rate");
-	//json_t *channels				= json_find_first_label(root, "channels");
-	//json_t *endianness				= json_find_first_label(root, "endianness");
-	//json_t *width					= json_find_first_label(root, "width");
-	//json_t *depth					= json_find_first_label(root, "depth");
-	//json_t *lame_bitrate			= json_find_first_label(root, "lame_bitrate");
-	//json_t *lame_quality			= json_find_first_label(root, "lame_quality");
-	//json_t *voice_activation		= json_find_first_label(root, "voice_activation");
-	//json_t *filename				= json_find_first_label(root, "filename");
-
 	if (!filename) {
 		sprintf(req->opts->file, "%s/precorder_%s.%s", DEFAULT_FILE_LOCATION, timestamp, extension);
 	}
@@ -108,18 +97,12 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 		sprintf(req->opts->file, "%s/%s.%s", DEFAULT_FILE_LOCATION, filename, extension);
 	}
 
-	req->opts->source_device  = source_device?source_device:SOURCE_DEVICE_MIC;
-
+	req->opts->source_device  = source_device?source_device:0;
 	req->opts->stream_rate		= stream_rate?stream_rate:16000;
-	//req->opts->channels			= channels?atoi(channels->child->text):1;
-	//req->opts->endianness		= endianness?atoi(endianness->child->text):1234;
-
-	//req->opts->width		= width?atoi(width->child->text):16;
-	//req->opts->depth		= depth?atoi(depth->child->text):16;
 	req->opts->lame_bitrate		= lame_bitrate?lame_bitrate:96;
 	req->opts->lame_quality		= lame_quality?lame_quality:6;
 
-	req->opts->voice_activation		= voice_activation?voice_activation:VOICE_ACTIVATION_NO;
+	req->opts->voice_activation		= voice_activation?voice_activation:0;
 
 	//json_free_value(&object);
 

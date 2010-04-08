@@ -35,8 +35,8 @@
  * 'pulsesrc' gst element
  */
 typedef enum {
-	SOURCE_DEVICE_MIC,		//!< pcm_input
-	SOURCE_DEVICE_STREAM,	//!< pcm_output.monitor
+	pcm_input,		//!< microphone
+	pcm_output.monitor,	//!< output pipeline
 } SOURCE_DEVICE_t;
 
 
@@ -57,11 +57,6 @@ typedef struct {
 	SOURCE_DEVICE_t			source_device;
 
 	unsigned int			stream_rate;
-	unsigned int			channels;
-	unsigned int			endianness;
-
-	unsigned int			width;
-	unsigned int			depth;
 	unsigned int			lame_bitrate;
 	unsigned int			lame_quality;
 

@@ -66,8 +66,6 @@ void *record_wrapper(void *ptr) {
 bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	LSMessageRef(message);
-	char timestamp[16];
-	get_timestamp_string(timestamp);
 	char *extension;
 	extension = "mp3";
 	RECORD_REQUEST_t *req = malloc(sizeof(RECORD_REQUEST_t));
@@ -90,7 +88,9 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_get_int(object, "lame_quality", &lame_quality);
 	json_get_bool(object, "voice_activation", &voice_activation);
 
-	if (!filename) {
+	if (filename == 0 || !filename) {
+		char timestamp[16];
+		get_timestamp_string(timestamp);
 		sprintf(req->opts->file, "%s/precorder_%s.%s", DEFAULT_FILE_LOCATION, timestamp, extension);
 	}
 	else {

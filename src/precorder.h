@@ -35,15 +35,15 @@
  * 'pulsesrc' gst element
  */
 typedef enum {
-	pcm_input,		//!< microphone
-	pcm_output.monitor,	//!< output pipeline
+	INPUT_FROM_MIC,		//!< pcm_input
+	INPUT_FROM_STREAM,	//!< pcm_output.monitor
 } SOURCE_DEVICE_t;
 
 
 
 typedef enum {
-	VOICE_ACTIVATION_YES,	//!< Limit gstlevel
-	VOICE_ACTIVATION_NO,	//!< Unlimit gstlevel
+	VOICE_ACTIVATION_NO,	//!< unlimit gstlevel
+	VOICE_ACTIVATION_YES,	//!< limit gstlevel
 } VOICE_ACTIVATION_t;
 
 

@@ -230,7 +230,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	// Setup pulse source
 	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
 
-	if (opts->source_device == 1) {
+	if (opts->source_device == INPUT_FROM_STREAM) {
 		g_object_set(G_OBJECT(psrc), "device", "pcm_output.monitor", NULL);
 	}
 	else {
@@ -278,7 +278,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	int state;
 	state = 1;
 
-	if (opts->voice_activation == 1) {
+	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
 		// run sync'ed so it doesn't trip over itself
 		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
 		while (is_eos == 0) {

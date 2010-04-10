@@ -66,8 +66,10 @@ void *record_wrapper(void *ptr) {
 bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 	LSMessageRef(message);
+
 	char *extension;
 	extension = "mp3";
+
 	RECORD_REQUEST_t *req = malloc(sizeof(RECORD_REQUEST_t));
 	req->opts = malloc(sizeof(PIPELINE_OPTS_t));
 	req->message = message;
@@ -86,7 +88,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_get_int(object, "stream_rate", &stream_rate);
 	json_get_int(object, "lame_bitrate", &lame_bitrate);
 	json_get_int(object, "lame_quality", &lame_quality);
-	json_get_bool(object, "voice_activation", &voice_activation);
+	json_get_int(object, "voice_activation", &voice_activation);
 
 	if (filename == 0 || !filename) {
 		char timestamp[16];
@@ -97,12 +99,12 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 		sprintf(req->opts->file, "%s/%s.%s", DEFAULT_FILE_LOCATION, filename, extension);
 	}
 
-	req->opts->source_device  = source_device?source_device:0;
-	req->opts->stream_rate		= stream_rate?stream_rate:16000;
-	req->opts->lame_bitrate		= lame_bitrate?lame_bitrate:96;
-	req->opts->lame_quality		= lame_quality?lame_quality:6;
+	req->opts->source_device	= source_device ? source_device : 0;
+	req->opts->stream_rate	= stream_rate ? stream_rate : 16000;
+	req->opts->lame_bitrate	= lame_bitrate ? lame_bitrate : 96;
+	req->opts->lame_quality	= lame_quality ? lame_quality : 6;
 
-	req->opts->voice_activation		= voice_activation?voice_activation:0;
+	req->opts->voice_activation	= voice_activation ? voice_activation : 0;
 
 	//json_free_value(&object);
 

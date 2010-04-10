@@ -271,7 +271,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	if (opts->voice_activation == 1) {
 		// Link elements with gstlevel
 		gst_element_link_filtered(psrc, vact, acaps);
-		gst_element_link_many(acaps, aenc, fsink, NULL);
+		gst_element_link_many(vact, aenc, fsink, NULL);
 		// Set watch for level element messages
 		level_bus = gst_element_get_bus (vact);
 		watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);

@@ -268,7 +268,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
 	gst_bus_add_watch(bus, bus_call, recording_loop);
 
-	if (opts->voice_activation == VOICE_ACTIVATION_YES) {
+	if (opts->voice_activation == 1) {
 		// Link elements with gstlevel
 		gst_element_link_filtered(psrc, vact, acaps);
 		gst_element_link_many(acaps, aenc, fsink, NULL);

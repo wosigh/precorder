@@ -42,8 +42,8 @@ typedef enum {
 
 
 typedef enum {
-	VOICE_ACTIVATION_NO,	//!< unlimit gstlevel
-	VOICE_ACTIVATION_YES,	//!< limit gstlevel
+	VOICE_ACTIVATION_NO = 0,	//!< unlimit gstlevel
+	VOICE_ACTIVATION_YES = 1,	//!< limit gstlevel
 } VOICE_ACTIVATION_t;
 
 
@@ -61,7 +61,8 @@ typedef struct {
 	unsigned int			lame_quality;
 
 	char					filename;
-	VOICE_ACTIVATION_t		voice_activation;
+	//VOICE_ACTIVATION_t		voice_activation;
+	unsigned int			voice_activation;
 
 } PIPELINE_OPTS_t;
 

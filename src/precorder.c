@@ -218,7 +218,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	GstCaps *acaps;
 	GstBus *bus, *level_bus;
 	gint watch_id;
-	extern gdouble rms;
 
 	gst_init(NULL, NULL);
 
@@ -230,7 +229,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	// Setup pulse source
 	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
 
-	if (opts->source_device == INPUT_FROM_STREAM) {
+	if (opts->source_device == 1) {
 		g_object_set(G_OBJECT(psrc), "device", "pcm_output.monitor", NULL);
 	}
 	else {
@@ -269,17 +268,24 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	gst_bus_add_watch(bus, bus_call, recording_loop);
 
 	if (opts->voice_activation == 1) {
+		// run sync'ed so it doesn't trip over itself
+		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
+
 		// Link elements with gstlevel
 		gst_element_link_filtered(psrc, vact, acaps);
 		gst_element_link_many(vact, aenc, fsink, NULL);
+
 		// Set watch for level element messages
 		level_bus = gst_element_get_bus (vact);
 		watch_id = gst_bus_add_watch (level_bus, message_handler, NULL);
+
+		extern gdouble rms;
+		extern int is_eos;
+
 		int state;
 		state = 1;
 
-		// run sync'ed so it doesn't trip over itself
-		g_object_set (G_OBJECT (fsink), "sync", TRUE, NULL);
+		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 		while (is_eos == 0) {
 			if ((rms >= 0.2) && (state != 1)) {
 				gst_element_set_state(pipeline, GST_STATE_PLAYING);
@@ -296,6 +302,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
+		g_main_loop_run(recording_loop);
 	}
 
 	//g_signal_connect(pipeline, "deep_notify", G_CALLBACK(gst_object_default_deep_notify), NULL);
@@ -303,8 +310,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	//gst_object_unref(bus);
 
 	//gst_object_unref(level_bus);
-
-	g_main_loop_run(recording_loop);
 
 	gst_element_set_state(pipeline, GST_STATE_NULL);
 

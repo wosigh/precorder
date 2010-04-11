@@ -28,7 +28,7 @@ MicRecAssistant.prototype.activate = function() {
 
 MicRecAssistant.prototype.record = function(event) {
 	this.recordingStarted();
-    this.controller.serviceRequest('palm://org.webosinternals.precorder', {
+    this.controller.serviceRequest('luna://org.webosinternals.precorder', {
         method: 'start_record',
         parameters: {
             source_device: prefs.source_device,
@@ -43,7 +43,7 @@ MicRecAssistant.prototype.record = function(event) {
     });
 };
 
-RecordAssistant.prototype.recordingStarted = function(msg) {
+MicRecAssistant.prototype.recordingStarted = function(msg) {
     currentRecording = true;
 	this.recordModel.disabled = true;
     this.controller.modelChanged(this.recordModel);
@@ -53,14 +53,14 @@ RecordAssistant.prototype.recordingStarted = function(msg) {
     // start time
 };
 
-RecordAssistant.prototype.recordFailure = function(response) {
+MicRecAssistant.prototype.recordFailure = function(response) {
     currentRecording = false;
     $("messages").innerHTML += "Recording failed:<br>" + response.errorText;
     // pop up error dialog then pop scene
 };
 
 MicRecAssistant.prototype.stop = function(event, lastFilename) {
-		this.controller.serviceRequest('palm://org.webosinternals.gstservice', {
+		this.controller.serviceRequest('luna://org.webosinternals.gstservice', {
         	method: 'stop_record',
         	onSuccess: this.recordingStopped,
         	onFailure: this.stopFailure,
@@ -74,7 +74,7 @@ MicRecAssistant.prototype.stop = function(event, lastFilename) {
     	}
 };
 
-RecordAssistant.prototype.recordingStopped = function(response) {
+MicRecAssistant.prototype.recordingStopped = function(response) {
 	this.recordModel.disabled = false;
     this.controller.modelChanged(this.recordModel);
 	this.stopModel.disabled = true;
@@ -82,7 +82,7 @@ RecordAssistant.prototype.recordingStopped = function(response) {
     currentRecording = false;
 };
 
-RecordAssistant.prototype.stopFailure = function(response) {
+MicRecAssistant.prototype.stopFailure = function(response) {
     currentRecording = false;  // Might as well, can't stop it now anyway
     $("messages").innerHTML += "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
 };

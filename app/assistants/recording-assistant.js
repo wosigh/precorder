@@ -1,7 +1,7 @@
-function MicRecAssistant(){
+function RecordingAssistant(){
 }
 
-MicRecAssistant.prototype.setup = function() {
+RecordingAssistant.prototype.setup = function() {
 	this.record = this.record.bind(this);
     this.stop = this.stop.bind(this);
 	this.play = this.play.bind(this);
@@ -19,19 +19,19 @@ MicRecAssistant.prototype.setup = function() {
     this.controller.listen('play', Mojo.Event.tap, this.play);
 };
 
-MicRecAssistant.prototype.activate = function() {
+RecordingAssistant.prototype.activate = function() {
 	this.recordingStarted = this.recordingStarted.bind(this);
     this.recordFailure = this.recordFailure.bind(this);
     this.recordingStopped = this.recordingStopped.bind(this);
     this.stopFailure = this.stopFailure.bind(this);
 };
 
-MicRecAssistant.prototype.record = function(event) {
+RecordingAssistant.prototype.record = function(event) {
 	this.recordingStarted();
     this.controller.serviceRequest('luna://org.webosinternals.precorder', {
         method: 'start_record',
         parameters: {
-            source_device: prefs.source_device,
+            source_device: source_device,
             stream_rate: prefs.stream_rate,
             lame_bitrate: prefs.lame_bitrate,
             lame_quality: prefs.lame_quality,
@@ -43,7 +43,7 @@ MicRecAssistant.prototype.record = function(event) {
     });
 };
 
-MicRecAssistant.prototype.recordingStarted = function(msg) {
+RecordingAssistant.prototype.recordingStarted = function(msg) {
     currentRecording = true;
 	this.recordModel.disabled = true;
     this.controller.modelChanged(this.recordModel);
@@ -53,14 +53,14 @@ MicRecAssistant.prototype.recordingStarted = function(msg) {
     // start time
 };
 
-MicRecAssistant.prototype.recordFailure = function(response) {
+RecordingAssistant.prototype.recordFailure = function(response) {
     currentRecording = false;
     $("messages").innerHTML += "Recording failed:<br>" + response.errorText;
     // pop up error dialog then pop scene
 };
 
-MicRecAssistant.prototype.stop = function(event, lastFilename) {
-		this.controller.serviceRequest('luna://org.webosinternals.gstservice', {
+RecordingAssistant.prototype.stop = function(event, lastFilename) {
+		this.controller.serviceRequest('luna://org.webosinternals.precorder', {
         	method: 'stop_record',
         	onSuccess: this.recordingStopped,
         	onFailure: this.stopFailure,
@@ -74,7 +74,7 @@ MicRecAssistant.prototype.stop = function(event, lastFilename) {
     	}
 };
 
-MicRecAssistant.prototype.recordingStopped = function(response) {
+RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.recordModel.disabled = false;
     this.controller.modelChanged(this.recordModel);
 	this.stopModel.disabled = true;
@@ -82,12 +82,12 @@ MicRecAssistant.prototype.recordingStopped = function(response) {
     currentRecording = false;
 };
 
-MicRecAssistant.prototype.stopFailure = function(response) {
+RecordingAssistant.prototype.stopFailure = function(response) {
     currentRecording = false;  // Might as well, can't stop it now anyway
     $("messages").innerHTML += "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
 };
 
-MicRecAssistant.prototype.play = function(event) {
+RecordingAssistant.prototype.play = function(event) {
     var p = {};
     
     if(this.lastRecording)
@@ -102,10 +102,10 @@ MicRecAssistant.prototype.play = function(event) {
     });
 };
 
-MicRecAssistant.prototype.deactivate = function(event) {
+RecordingAssistant.prototype.deactivate = function(event) {
 };
 
-MicRecAssistant.prototype.cleanup = function(event) {
+RecordingAssistant.prototype.cleanup = function(event) {
     this.controller.stopListening('record', Mojo.Event.tap, this.record);
     this.controller.stopListening('stop', Mojo.Event.tap, this.stop);
 	this.controller.stopListening('play', Mojo.Event.tap, this.play);

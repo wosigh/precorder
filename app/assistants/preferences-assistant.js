@@ -10,12 +10,12 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Stream Rate"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: $L("8000"), value: "8000"},
-                    {label: $L("12000"), value: "12000"},
-                    {label: $L("16000"), value: "16000"}
+                    {label: $L("8000"), value: 8000},
+                    {label: $L("12000"), value: 12000},
+                    {label: $L("16000"), value: 16000}
                     ]
             },
-            this.audioModel = {
+            this.rateModel = {
                 value: prefs.stream_rate,
                 optionName: "stream_rate",
                 disabled: false
@@ -30,12 +30,12 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Bitrate"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: $L("64"), value: "64"},
-                    {label: $L("96"), value: "96"},
-                    {label: $L("128"), value: "128"}
+                    {label: $L("64"), value: 64},
+                    {label: $L("96"), value: 96},
+                    {label: $L("128"), value: 128}
                     ]
             },
-            this.videoModel = {
+            this.bitrateModel = {
                 value: prefs.bitrate,
                 optionName: "bitrate",
                 disabled: false
@@ -50,12 +50,12 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Encoder Quality"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: $L("Best"), value: "0"},
-					{label: $L("Medium"), value: "5"},
-                    {label: $L("Worst"), value: "9"}
+                    {label: $L("Best"), value: 0},
+					{label: $L("Medium"), value: 5},
+                    {label: $L("Worst"), value: 9}
                     ]
             },
-            this.containerModel = {
+            this.qualityModel = {
                 value: prefs.quality,
                 optionName: "quality",
                 disabled: false
@@ -70,11 +70,11 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Voice Activation (disabled)"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: $L("On"), value: "0"},
-                    {label: $L("Off"), value: "0"}
+                    {label: $L("On"), value: 0},
+                    {label: $L("Off"), value: 0}
                     ]
             },
-            this.streamModel = {
+            this.vcvaModel = {
                 value: prefs.voice_activation,
                 optionName: "voice_activation",
                 disabled: false

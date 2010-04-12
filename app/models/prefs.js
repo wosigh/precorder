@@ -1,14 +1,13 @@
 // Copyright (c) 2009 Roy Sutton
-// Preferences class for webOS
+
 var prefs = {
 
     // defaults contains the names and default values, will be used if no saved prefs
     //  be careful not to use any values that would interfere with the object
-    defaults: { audio: "AAC",
-                video: "H.264/AVC",
-                container: "mp4",
-                stream: "both",
-                LED: "off",
+    defaults: { stream_rate: 16000,
+                bitrate: 96,
+                quality: 5,
+                voice_activation: 0,
                 firstUse: true
     },
 

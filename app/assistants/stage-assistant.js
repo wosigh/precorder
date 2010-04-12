@@ -1,18 +1,19 @@
 function StageAssistant() {
-    videoRecording = false;
+	source_device = 0;
+    currentRecording = false;
 }
 
 StageAssistant.prototype.setup = function() {
     prefs.load();
-    this.controller.pushScene("mic-rec");
+    this.controller.pushScene("recording");
 	viewMenuModel = {
 		visible: true,
 		items: [
 			{},
-			{toggleCmd: 'mic-rec',
+			{toggleCmd: 'mic',
 			items: [
-				{label: $L("Microphone"), command: 'mic-rec', width: 160},
-				{label: $L("Output Monitor"), command: 'output-rec', width: 160}
+				{label: $L("Microphone"), command: 'mic', width: 160},
+				{label: $L("Output Monitor"), command: 'output', width: 160}
 				] },
 			{}
 		]
@@ -38,11 +39,11 @@ StageAssistant.prototype.handleCommand = function (event) {
             break;
         case Mojo.Event.command:
             switch (event.command) { 
-				case 'mic-rec':
-					stageController.swapScene('mic-rec');
+				case 'mic':
+					source_device = 0;
 					
-				case 'stream-rec':
-					stageController.swapScene('stream-rec');
+				case 'output':
+					source_device = 1;
 			  
                 case Mojo.Menu.helpCmd:
                     this.controller.pushScene('support');

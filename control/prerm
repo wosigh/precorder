@@ -2,6 +2,12 @@
 
 PID="org.webosinternals.precorder"
 
+# Handle execution as pmPreRemove.script
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then
+  IPKG_OFFLINE_ROOT=/media/cryptofs/apps
+  mount -o remount,rw /
+fi
+
 MP3LAMESYM="/usr/lib/libmp3lame.so"
 GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"
 GSTLEVELSYM="/usr/lib/gstreamer-0.10/libgstlevel-webosinternals.so"

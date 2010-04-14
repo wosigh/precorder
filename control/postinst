@@ -2,16 +2,18 @@
 
 PID="org.webosinternals.precorder"
 
+# Handle execution as pmPostInstall.script
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then
+  IPKG_OFFLINE_ROOT=/media/cryptofs/apps
+  mount -o remount,rw /
+fi
+
 MP3LAME="bin/libmp3lame.so"
 GSTLAME="bin/libgstlame.so"
 GSTLEVEL="bin/libgstlevel.so"
 MP3LAMESYM="/usr/lib/libmp3lame.so"
 GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"
 GSTLEVELSYM="/usr/lib/gstreamer-0.10/libgstlevel-webosinternals.so"
-
-if [ -z "$IPKG_OFFLINE_ROOT" ]; then
-  IPKG_OFFLINE_ROOT=/media/cryptofs/apps
-fi
 
 # Symlink lame binary
 rm -f $MP3LAMESYM

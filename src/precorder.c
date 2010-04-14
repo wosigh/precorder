@@ -42,7 +42,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	case GST_MESSAGE_UNKNOWN:
 		break;
 	case GST_MESSAGE_EOS:
-		is_eos = 1;
+		quit_recording_loop = TRUE;
 		break;
 	case GST_MESSAGE_ERROR: {
 		gchar *debug;

@@ -1,5 +1,6 @@
 /*=============================================================================
  Copyright (C) 2009 Ryan Hope <rmh3093@gmail.com>
+ Copyright (C) 2010 zsoc <zsoc.webosinternals@gmail.com>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -20,6 +21,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <sched.h>
+#include <string.h>
 
 #include "precorder.h"
 #include "luna.h"
@@ -56,10 +58,10 @@ void *record_wrapper(void *ptr) {
 	free(req->opts);
 	free(req);
 
-	int removed = 0;
-	clean_dir(DEFAULT_FILE_LOCATION, removed);
-	if (removed)
-		printf("Removed %d 0-length files from %s", removed, DEFAULT_FILE_LOCATION);
+	//int removed = 0;
+	//clean_dir(DEFAULT_FILE_LOCATION, removed);
+	//if (removed)
+	//	printf("Removed %d 0-length files from %s", removed, DEFAULT_FILE_LOCATION);
 
 }
 
@@ -90,7 +92,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	json_get_int(object, "lame_quality", &lame_quality);
 	json_get_int(object, "voice_activation", &voice_activation);
 
-	if (filename == 0 || !filename) {
+	if (!filename || !strcmp(filename, "0")) {
 		char timestamp[16];
 		get_timestamp_string(timestamp);
 		sprintf(req->opts->file, "%s/precorder_%s.%s", DEFAULT_FILE_LOCATION, timestamp, extension);

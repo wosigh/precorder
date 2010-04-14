@@ -1,5 +1,6 @@
 /*=============================================================================
  Copyright (C) 2009 Ryan Hope <rmh3093@gmail.com>
+ Copyright (C) 2010 zsoc <zsoc.webosinternals@gmail.com>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

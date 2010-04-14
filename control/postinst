@@ -30,7 +30,7 @@ gst-inspect
 
 # Install the upstart script
 rm -f /etc/event.d/${PID}
-cp $IPKG_OFFLINE_ROOT/etc/event.d/${PID} /etc/event.d/${PID}
+cp $IPKG_OFFLINE_ROOT/usr/palm/applications/${PID}/upstart/${PID} /etc/event.d/${PID}
 
 # Start the service
 /sbin/start ${PID}

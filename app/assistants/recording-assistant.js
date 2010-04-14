@@ -87,6 +87,7 @@ RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.stopModel.disabled = true;
     this.controller.modelChanged(this.stopModel);
     currentRecording = false;
+	$("messages").innerHTML += "Recording Stopped.<br>";
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {

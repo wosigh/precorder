@@ -6,7 +6,10 @@ RecordingAssistant.prototype.setup = function() {
     this.stop = this.stop.bind(this);
 	this.play = this.play.bind(this);
 	
-	// viewMenuModel is a global defined in stage-assistant.js
+	// this.appMenuModel defined in stage-assistant.js
+	this.controller.setupWidget(Mojo.Menu.appMenu, {omitDefaultItems: true}, appMenuModel);
+	
+	// viewMenuModel defined in stage-assistant.js
 	this.controller.setupWidget(Mojo.Menu.viewMenu, {spacerHeight: 0, menuClass:"no-fade"}, viewMenuModel);
     
     this.controller.setupWidget('record', {}, this.recordModel = { buttonLabel : $L("Record"), disabled: false });
@@ -55,6 +58,10 @@ RecordingAssistant.prototype.recordingStarted = function(msg) {
 
 RecordingAssistant.prototype.recordFailure = function(response) {
     currentRecording = false;
+	this.recordModel.disabled = false;
+    this.controller.modelChanged(this.recordModel);
+    this.stopModel.disabled = true;
+    this.controller.modelChanged(this.stopModel);
     $("messages").innerHTML += "Recording failed:<br>" + response.errorText;
     // pop up error dialog then pop scene
 };

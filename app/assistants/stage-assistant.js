@@ -1,11 +1,20 @@
 function StageAssistant() {
 	source_device = 0;
+	filename = 0;
     currentRecording = false;
 }
 
 StageAssistant.prototype.setup = function() {
+	appMenuModel = {
+    	items: [
+			{label: "Preferences", command: 'pushPrefs'}
+         // {label: "Support", command: 'pushSupport'}
+    	]
+	};
+	
     prefs.load();
     this.controller.pushScene("recording");
+	
 	viewMenuModel = {
 		visible: true,
 		items: [
@@ -22,9 +31,9 @@ StageAssistant.prototype.setup = function() {
 
 StageAssistant.prototype.handleCommand = function (event) {
     var currentScene = this.controller.activeScene();
-	var stageController = this.controller.getActiveStageController();
-		
-    switch(event.type) {
+	var stageController =  Mojo.Controller.appController.getActiveStageController()
+	
+	switch(event.type) {
         case Mojo.Event.commandEnable:
             switch (event.command) {
                 case Mojo.Menu.prefsCmd:
@@ -41,17 +50,20 @@ StageAssistant.prototype.handleCommand = function (event) {
             switch (event.command) { 
 				case 'mic':
 					source_device = 0;
+					break;
 					
 				case 'output':
 					source_device = 1;
-			  
-                case Mojo.Menu.helpCmd:
-                    this.controller.pushScene('support');
-                    break;
+					break;
                 
-                case Mojo.Menu.prefsCmd:
+                case 'pushPrefs':
                     this.controller.pushScene('preferences');
                     break;
+				
+			 // case Mojo.Menu.pushSupport:
+                   // this.controller.pushScene('support');
+                   // break;	
+					
             }
         break;
     }

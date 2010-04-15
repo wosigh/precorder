@@ -23,7 +23,7 @@ ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$MP3LAME $MP3LAMESYM
 rm -f $GSTLAMESYM
 rm -f $GSTLEVELSYM
 ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLAME $GSTLAMESYM
-ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLEVEL $GSTLAMELEVEL
+ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLEVEL $GSTLEVELSYM
 
 # Register gstreamer binaries
 gst-inspect

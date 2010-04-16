@@ -22,7 +22,7 @@ StageAssistant.prototype.setup = function() {
 			{toggleCmd: 'mic',
 			items: [
 				{label: $L("Microphone"), command: 'mic', width: 160},
-				{label: $L("Output Monitor"), command: 'output', width: 160}
+				{label: $L("Media Capture"), command: 'output', width: 160}
 				] },
 			{}
 		]

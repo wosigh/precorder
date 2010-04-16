@@ -11,8 +11,10 @@ PreferencesAssistant.prototype.setup = function() {
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
                     {label: $L("8000"), value: 8000},
-                    {label: $L("12000"), value: 12000},
-                    {label: $L("16000"), value: 16000}
+                    {label: $L("11025"), value: 11025},
+					{label: $L("12000"), value: 12000},
+                    {label: $L("16000"), value: 16000},
+					{label: $L("22050"), value: 22050}
                     ]
             },
             this.rateModel = {
@@ -25,7 +27,7 @@ PreferencesAssistant.prototype.setup = function() {
     Mojo.Event.listen(this.controller.get("stream_rate"),
                       Mojo.Event.propertyChange, this.optionChanged);
 
-    this.controller.setupWidget("bitrate",
+    this.controller.setupWidget("lame_bitrate",
             {
                 label: $L("Bitrate"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
@@ -36,18 +38,18 @@ PreferencesAssistant.prototype.setup = function() {
                     ]
             },
             this.bitrateModel = {
-                value: prefs.bitrate,
-                optionName: "bitrate",
+                value: prefs.lame_bitrate,
+                optionName: "lame_bitrate",
                 disabled: false
             }
         );
 
-    Mojo.Event.listen(this.controller.get("bitrate"),
+    Mojo.Event.listen(this.controller.get("lame_bitrate"),
                       Mojo.Event.propertyChange, this.optionChanged);
 
-    this.controller.setupWidget("quality",
+    this.controller.setupWidget("lame_quality",
             {
-                label: $L("Encoder Quality"),
+                label: $L("Quality"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
                     {label: $L("Best"), value: 0},
@@ -56,16 +58,16 @@ PreferencesAssistant.prototype.setup = function() {
                     ]
             },
             this.qualityModel = {
-                value: prefs.quality,
-                optionName: "quality",
+                value: prefs.lame_quality,
+                optionName: "lame_quality",
                 disabled: false
             }
         );
 
-    Mojo.Event.listen(this.controller.get("quality"),
+    Mojo.Event.listen(this.controller.get("lame_quality"),
                       Mojo.Event.propertyChange, this.optionChanged);
 
-    this.controller.setupWidget("voice_activation",
+   /* this.controller.setupWidget("voice_activation",
             {
                 label: $L("Voice Activation (disabled)"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
@@ -82,7 +84,7 @@ PreferencesAssistant.prototype.setup = function() {
         );
 
     Mojo.Event.listen(this.controller.get("voice_activation"),
-                      Mojo.Event.propertyChange, this.optionChanged);
+                      Mojo.Event.propertyChange, this.optionChanged); */
 
     } catch(err) { Mojo.Log.error("err: %j", err); }
 };
@@ -105,6 +107,6 @@ PreferencesAssistant.prototype.cleanup = function(event) {
         Mojo.Event.propertyChange, this.optionChanged);
     Mojo.Event.stopListening(this.controller.get("quality"),
         Mojo.Event.propertyChange, this.optionChanged);
-    Mojo.Event.stopListening(this.controller.get("voice_activation"),
-        Mojo.Event.propertyChange, this.optionChanged);
+ // Mojo.Event.stopListening(this.controller.get("voice_activation"),
+ //     Mojo.Event.propertyChange, this.optionChanged);
 };

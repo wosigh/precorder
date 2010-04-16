@@ -11,13 +11,15 @@ fi
 MP3LAME="bin/libmp3lame.so"
 GSTLAME="bin/libgstlame.so"
 GSTLEVEL="bin/libgstlevel.so"
-MP3LAMESYM="/usr/lib/libmp3lame.so"
+MP3LAMESYM1="/usr/lib/libmp3lame.so"
+MP3LAMESYM2="/usr/lib/libmp3lame.so.0"
 GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"
 GSTLEVELSYM="/usr/lib/gstreamer-0.10/libgstlevel-webosinternals.so"
 
 # Symlink lame binary
 rm -f $MP3LAMESYM
-ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$MP3LAME $MP3LAMESYM
+ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$MP3LAME $MP3LAMESYM1
+ln -s $MP3LAMESYM1 $MP3LAMESYM2
 
 # Symlink gstreamer binaries
 rm -f $GSTLAMESYM

@@ -5,9 +5,9 @@ var prefs = {
     // defaults contains the names and default values, will be used if no saved prefs
     //  be careful not to use any values that would interfere with the object
     defaults: { stream_rate: 16000,
-                bitrate: 96,
-                quality: 5,
-                voice_activation: 0,
+                lame_bitrate: 96,
+                lame_quality: 5,
+             // voice_activation: 0,
                 firstUse: true
     },
 

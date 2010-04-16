@@ -55,6 +55,12 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 		break;
 	}
 	case GST_MESSAGE_WARNING:
+		gchat *debug;
+		GError *error;
+		gst_message_parse_warning(msg, &gerror, &debug);
+		g_free(debug);
+		asprintf(&message, "Warning: %s", error->message);
+		g_error_free(error);
 		break;
 	case GST_MESSAGE_INFO:
 		break;

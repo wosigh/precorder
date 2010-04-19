@@ -34,7 +34,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	extern int is_eos;
 
 	int len = 0;
-	char *message = 0;
+	char *jsonmessage = 0;
 
 	int message_type = GST_MESSAGE_TYPE(msg);
 
@@ -50,7 +50,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 		GError *error;
 		gst_message_parse_error(msg, &error, &debug);
 		g_free(debug);
-		asprintf(&message, "Error: %s", error->message);
+		asprintf(&jsonmessage, "Error: %s", error->message);
 		g_error_free(error);
 		break;
 	}
@@ -59,7 +59,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 		GError *error;
 		gst_message_parse_warning(msg, &error, &debug);
 		g_free(debug);
-		asprintf(&message, "Warning: %s", error->message);
+		asprintf(&jsonmessage, "Warning: %s", error->message);
 		g_error_free(error);
 		break;
 	}
@@ -69,7 +69,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 		int idx = 0;
 		GstTagList *taglist;
 		gst_message_parse_tag(msg, &taglist);
-		asprintf(&message, "%s", gst_structure_to_string(taglist));
+		asprintf(&jsonmessage, "%s", gst_structure_to_string(taglist));
 		gst_tag_list_free(taglist);
 		break;
 	}
@@ -78,7 +78,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	case GST_MESSAGE_STATE_CHANGED: {
 		GstState oldState, newState, pendingState;
 		gst_message_parse_state_changed(msg, &oldState, &newState, &pendingState);
-		asprintf(&message, "Old state: %d, New state: %d, Pending state: %d", oldState, newState, pendingState);
+		asprintf(&jsonmessage, "Old state: %d, New state: %d, Pending state: %d", oldState, newState, pendingState);
 		break;
 	}
 	case GST_MESSAGE_STATE_DIRTY:
@@ -89,19 +89,19 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 		GstClock *clock;
 		gboolean *ready;
 		gst_message_parse_clock_provide(msg, &clock, ready);
-		asprintf(&message, "Provide clock: %s, Ready: %d", (clock ? GST_OBJECT_NAME(clock) : "NULL"), ready);
+		asprintf(&jsonmessage, "Provide clock: %s, Ready: %d", (clock ? GST_OBJECT_NAME(clock) : "NULL"), ready);
 		break;
 	}
 	case GST_MESSAGE_CLOCK_LOST: {
 		GstClock *clock;
 		gst_message_parse_clock_lost(msg, &clock);
-		asprintf(&message, "Lost clock: %s", (clock ? GST_OBJECT_NAME(clock) : "NULL"));
+		asprintf(&jsonmessage, "Lost clock: %s", (clock ? GST_OBJECT_NAME(clock) : "NULL"));
 		break;
 	}
 	case GST_MESSAGE_NEW_CLOCK: {
 		GstClock *clock;
 		gst_message_parse_new_clock(msg, &clock);
-		asprintf(&message, "New clock: %s", (clock ? GST_OBJECT_NAME(clock) : "NULL"));
+		asprintf(&jsonmessage, "New clock: %s", (clock ? GST_OBJECT_NAME(clock) : "NULL"));
 		break;
 	}
 	case GST_MESSAGE_STRUCTURE_CHANGE:
@@ -129,12 +129,12 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 	}
 
-	respond_to_gst_event(message_type, message);
+	respond_to_gst_event(message_type, jsonmessage);
 
 	if (quit_recording_loop)
 		g_main_loop_quit(recording_loop);
 
-	if (message) free(message);
+	if (jsonmessage) free(jsonmessage);
 
 	return TRUE;
 
@@ -267,7 +267,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 			"depth",			G_TYPE_INT,		16,
 			"endianness",		G_TYPE_INT,		1234,
 			"rate",				G_TYPE_INT,		opts->stream_rate,
-			"channels",			G_TYPE_INT,		2,
+			"channels",			G_TYPE_INT,		1,
 			"signed",			G_TYPE_BOOLEAN,	TRUE,
 			NULL
 	);

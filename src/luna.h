@@ -25,13 +25,13 @@
 
 typedef struct {
 	PIPELINE_OPTS_t *opts;
-	LSMessage		*message;
+	LSMessage		*jsonmessage;
 } RECORD_REQUEST_t;
 
 LSPalmService *serviceHandle;
 LSHandle *priv_bus;
 LSHandle *pub_bus;
 
-void respond_to_gst_event(int message_type, char *message);
+void respond_to_gst_event(int message_type, char *jsonmessage);
 
 #endif /* LUNA_H_ */

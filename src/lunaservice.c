@@ -42,13 +42,13 @@ void *record_wrapper(void *ptr) {
 		pthread_mutex_unlock(&recording_mutex);
 
 		if (ret==0)
-			LSMessageReply(pub_bus, req->message, "{\"returnValue\":true}", &lserror);
+			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":true}", &lserror);
 		else
-			LSMessageReply(pub_bus, req->message, "{\"returnValue\":false}", &lserror);
+			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false}", &lserror);
 		LSMessageUnref(req->message);
 
 	} else
-		LSMessageReply(pub_bus, req->message, "{\"returnValue\":false,\"errorText\":\"Could not acquire mutex lock. Recording in progress.\"}", &lserror);
+		LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false,\"errorText\":\"Could not acquire mutex lock. Recording in progress.\"}", &lserror);
 
 	if (LSErrorIsSet(&lserror)) {
 		LSErrorPrint(&lserror, stderr);
@@ -65,18 +65,18 @@ void *record_wrapper(void *ptr) {
 
 }
 
-bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
+bool start_record(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 
-	LSMessageRef(message);
+	LSMessageRef(jsonmessage);
 
 	char *extension;
 	extension = "mp3";
 
 	RECORD_REQUEST_t *req = malloc(sizeof(RECORD_REQUEST_t));
 	req->opts = malloc(sizeof(PIPELINE_OPTS_t));
-	req->message = message;
+	req->jsonmessage = jsonmessage;
 
-	json_t *object = LSMessageGetPayloadJSON(message);
+	json_t *object = LSMessageGetPayloadJSON(jsonmessage);
 
 	int source_device = 0;
 	int stream_rate = 0;
@@ -117,7 +117,7 @@ bool start_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 
 }
 
-bool stop_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
+bool stop_record(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 
 	LSError lserror;
 	LSErrorInit(&lserror);
@@ -125,9 +125,9 @@ bool stop_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 	bool ret = stop_recording();
 
 	if (ret)
-		LSMessageReply(lshandle, message, "{\"returnValue\":true}", &lserror);
+		LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":true}", &lserror);
 	else
-		LSMessageReply(lshandle, message, "{\"returnValue\":false}", &lserror);
+		LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":false}", &lserror);
 
 	if (LSErrorIsSet(&lserror)) {
 		LSErrorPrint(&lserror, stderr);
@@ -139,16 +139,16 @@ bool stop_record(LSHandle* lshandle, LSMessage *message, void *ctx) {
 }
 
 
-bool get_events(LSHandle* lshandle, LSMessage *message, void *ctx) {
+bool get_events(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 
 	LSError lserror;
 	LSErrorInit(&lserror);
 
 	bool subscribed = false;
-	LSSubscriptionProcess(lshandle, message, &subscribed, &lserror);
+	LSSubscriptionProcess(lshandle, jsonmessage, &subscribed, &lserror);
 
 	if (!subscribed)
-		LSMessageReply(lshandle, message, "{\"returnValue\":false,\"errorText\":\"Requires subscription.\"}", &lserror);
+		LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":false,\"errorText\":\"Requires subscription.\"}", &lserror);
 
 	if (LSErrorIsSet(&lserror)) {
 		LSErrorPrint(&lserror, stderr);
@@ -189,7 +189,7 @@ void start_service() {
 
 }
 
-void respond_to_gst_event(int message_type, char *message) {
+void respond_to_gst_event(int message_type, char *jsonmessage) {
 
 	LSError lserror;
 	LSErrorInit(&lserror);
@@ -197,7 +197,7 @@ void respond_to_gst_event(int message_type, char *message) {
 	int len = 0;
 	char *jsonResponse = 0;
 
-	len = asprintf(&jsonResponse, "{\"gst_message_type\":%d,\"message\":\"%s\"}", message_type, message);
+	len = asprintf(&jsonResponse, "{\"gst_message_type\":%d,\"message\":\"%s\"}", message_type, jsonmessage);
 
 	LSSubscriptionRespond(serviceHandle, "/get_events", jsonResponse, &lserror);
 

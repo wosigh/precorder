@@ -38,12 +38,12 @@ RecordingAssistant.prototype.activate = function() {
     });
 };
 
-RecordingAssistant.prototype.eventPayload = function(jsonpayload){
-	if (jsonpayload.gst_message_type == 1) {
-		$("error-messages").innerHTML = jsonpayload.message;
+RecordingAssistant.prototype.eventPayload = function(payload){
+	if (payload.gst_message_type == 1) {
+		$("error-messages").innerHTML = payload.jsonmessage;
 	}
-	if (jsonpayload.gst_message_type == 2) {
-		$("warning-messages").innerHTML = jsonpayload.message;
+	if (payload.gst_message_type == 2) {
+		$("warning-messages").innerHTML = payload.jsonmessage;
 	}
 }
 

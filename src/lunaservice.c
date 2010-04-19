@@ -45,7 +45,7 @@ void *record_wrapper(void *ptr) {
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":true}", &lserror);
 		else
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false}", &lserror);
-		LSMessageUnref(req->message);
+		LSMessageUnref(req->jsonmessage);
 
 	} else
 		LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false,\"errorText\":\"Could not acquire mutex lock. Recording in progress.\"}", &lserror);

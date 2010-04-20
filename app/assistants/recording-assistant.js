@@ -32,17 +32,17 @@ RecordingAssistant.prototype.activate = function() {
 			parameters: {
 			subscribe: true
         	},
-        	onSuccess: this.eventPayload,
+        	onSuccess: this.eventSuccess,
         	onFailure: this.eventFailure,
         	onError: this.eventFailure
     });
 };
 
-RecordingAssistant.prototype.eventPayload = function(payload){
-	if (payload.gst_message_type == 1) {
+RecordingAssistant.prototype.eventSuccess = function(payload){
+	if (payload.gst_message_type == 2) {
 		$("error-messages").innerHTML = payload.jsonmessage;
 	}
-	if (payload.gst_message_type == 2) {
+	if (payload.gst_message_type == 4) {
 		$("warning-messages").innerHTML = payload.jsonmessage;
 	}
 }

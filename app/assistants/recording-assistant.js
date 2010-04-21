@@ -45,6 +45,11 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.gst_message_type == 4) {
 		$("warning-messages").innerHTML = payload.jsonmessage;
 	}
+	if(payload.lastfilename) {
+        this.lastRecording = lastfilename;
+        this.playModel.disabled = false;
+        this.controller.modelChanged(this.playModel);
+    }
 }
 
 RecordingAssistant.prototype.eventFailure = function(response){
@@ -88,33 +93,34 @@ RecordingAssistant.prototype.recordFailure = function(response) {
     // pop up error dialog then pop scene
 };
 
-RecordingAssistant.prototype.stop = function(event, lastFilename) {
+RecordingAssistant.prototype.stop = function(event) {
+		this.recordingStopping();
 		this.controller.serviceRequest('luna://org.webosinternals.precorder', {
         	method: 'stop_record',
         	onSuccess: this.recordingStopped,
         	onFailure: this.stopFailure,
         	onError: this.stopFailure
     	});
-		
-		if(lastFilename) {
-        	this.lastRecording = lastFilename;
-        	this.playModel.disabled = false;
-        	this.controller.modelChanged(this.playModel);
-    	}
+};
+
+RecordingAssistant.prototype.recordingStopping = function(){
+	this.stopModel.disabled = true;
+	this.controller.modelChanged(this.stopModel);
+	$("internal-messages").innerHTML = "Saving, please wait...<br>";
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
-	this.recordModel.disabled = false;
-    this.controller.modelChanged(this.recordModel);
-	this.stopModel.disabled = true;
-    this.controller.modelChanged(this.stopModel);
     currentRecording = false;
-	$("internal-messages").innerHTML += "Recording Stopped.<br>";
+	this.recordModel.disabled = false;
+	this.controller.modelChanged(this.recordModel);
+	$("internal-messages").innerHTML = "Recording Stopped.<br>";
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {
     currentRecording = false;  // Might as well, can't stop it now anyway
-    $("internal-messages").innerHTML += "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
+    this.recordModel.disabled = false;
+	this.controller.modelChanged(this.recordModel);
+    $("internal-messages").innerHTML = "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
 };
 
 RecordingAssistant.prototype.play = function(event) {

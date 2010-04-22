@@ -2,5 +2,5 @@ start on stopped finish
 
 console output
 
-exec /media/cryptofs/apps/usr/palm/applications/org.webosinternals.precorder/bin/org.webosinternals.precorder
+exec /var/usr/sbin/org.webosinternals.precorder
 respawn

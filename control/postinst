@@ -30,6 +30,11 @@ ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLEVEL $GSTLEVELSYM
 # Register gstreamer binaries
 gst-inspect
 
+# Copy executable outside of encrypted mount
+mkdir -p /var/usr/sbin/
+rm -f /var/usr/sbin/${PID}
+install -m 755 $IPKG_OFFLINE_ROOT/usr/palm/applications/${PID}/bin/${PID} /var/usr/sbin/${PID}
+
 # Install the upstart script
 rm -f /etc/event.d/${PID}
 cp $IPKG_OFFLINE_ROOT/usr/palm/applications/${PID}/upstart/${PID} /etc/event.d/${PID}

@@ -228,7 +228,7 @@ static gboolean get_position (GstElement *pipeline) {
 	  respond_to_gst_event(message_type, jsonmessage);
   }
 
-  if (jsonposition) free(jsonposition);
+  if (jsonmessage) free(jsonmessage);
   /* call me again */
   return TRUE;
 }

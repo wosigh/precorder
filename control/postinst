@@ -17,7 +17,8 @@ GSTLAMESYM="/usr/lib/gstreamer-0.10/libgstlame-webosinternals.so"
 GSTLEVELSYM="/usr/lib/gstreamer-0.10/libgstlevel-webosinternals.so"
 
 # Symlink lame binary
-rm -f $MP3LAMESYM
+rm -f $MP3LAMESYM1
+rm -f $MP3LAMESYM2
 ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$MP3LAME $MP3LAMESYM1
 ln -s $MP3LAMESYM1 $MP3LAMESYM2
 
@@ -28,7 +29,7 @@ ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLAME $GSTLAMESYM
 ln -s $IPKG_OFFLINE_ROOT/usr/palm/applications/$PID/$GSTLEVEL $GSTLEVELSYM
 
 # Register gstreamer binaries
-gst-inspect
+gst-inspect > /dev/null
 
 # Copy executable outside of encrypted mount
 mkdir -p /var/usr/sbin/

@@ -32,6 +32,6 @@ LSPalmService *serviceHandle;
 LSHandle *priv_bus;
 LSHandle *pub_bus;
 
-void respond_to_gst_event(int event_type, int message_type, char *jsonmessage, char *jsonposition);
+void respond_to_gst_event(int message_type, char *jsonmessage);
 
 #endif /* LUNA_H_ */

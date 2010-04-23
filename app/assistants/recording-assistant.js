@@ -45,13 +45,13 @@ RecordingAssistant.prototype.resetPosition = function() {
 
 RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.gst_message_type == 2) {
-		$("error-messages").innerHTML = payload.jsonmessage;
+		$("error-messages").innerHTML = payload.message;
 	}
 	if (payload.gst_message_type == 4) {
-		$("warning-messages").innerHTML = payload.jsonmessage;
+		$("warning-messages").innerHTML = payload.message;
 	}
 	if (payload.jsonposition) {
-		$("position").innerHTML = payload.jsonposition;
+		$("position").innerHTML = payload.time;
 	}
 	if(payload.lastfilename) {
         this.lastRecording = lastfilename;

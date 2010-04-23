@@ -129,7 +129,8 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 	}
 
-	respond_to_gst_event(message_type, jsonmessage);
+	int event_type = 1;
+	respond_to_gst_event(event_type, message_type, jsonmessage);
 
 	if (quit_recording_loop)
 		g_main_loop_quit(recording_loop);
@@ -216,7 +217,21 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
   return TRUE;
 }
 
+static gboolean get_position (GstElement *pipeline) {
+  GstFormat fmt = GST_FORMAT_TIME;
+  gint64 pos;
+  char *jsonposition = 0;
 
+  if (gst_element_query_position (pipeline, &fmt, &pos)) {
+	  asprinf(&jsonposition, "%"GST_TIME_FORMAT, GST_TIME_ARGS(pos));
+	  int event_type = 2;
+	  respond_to_gst_event(jsonposition);
+  }
+
+  if (jsonposition) free(jsonposition);
+  /* call me again */
+  return TRUE;
+}
 
 int record_start(PIPELINE_OPTS_t *opts) {
 
@@ -310,6 +325,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
+		g_timeout_add (200, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
 	}
 

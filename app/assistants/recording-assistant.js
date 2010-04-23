@@ -36,7 +36,12 @@ RecordingAssistant.prototype.activate = function() {
         	onFailure: this.eventFailure,
         	onError: this.eventFailure
     });
+	this.resetPosition();
 };
+
+RecordingAssistant.prototype.resetPosition = function() {
+	$("position").innerHTML = "00:00";
+}
 
 RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.gst_message_type == 2) {
@@ -44,6 +49,9 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	}
 	if (payload.gst_message_type == 4) {
 		$("warning-messages").innerHTML = payload.jsonmessage;
+	}
+	if (payload.jsonposition) {
+		$("position").innerHTML = payload.jsonposition;
 	}
 	if(payload.lastfilename) {
         this.lastRecording = lastfilename;
@@ -79,7 +87,7 @@ RecordingAssistant.prototype.recordingStarted = function(msg) {
     this.controller.modelChanged(this.recordModel);
     this.stopModel.disabled = false;
     this.controller.modelChanged(this.stopModel);
-    $("internal-messages").innerHTML += "Recording...<br>";
+    $("internal-messages").innerHTML = "Recording...<br>";
     // start time
 };
 
@@ -89,8 +97,7 @@ RecordingAssistant.prototype.recordFailure = function(response) {
     this.controller.modelChanged(this.recordModel);
     this.stopModel.disabled = true;
     this.controller.modelChanged(this.stopModel);
-    $("internal-messages").innerHTML += "Recording failed:<br>" + response.errorText;
-    // pop up error dialog then pop scene
+    $("internal-messages").innerHTML = "Recording failed:<br>" + response.errorText;
 };
 
 RecordingAssistant.prototype.stop = function(event) {

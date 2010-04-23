@@ -189,7 +189,7 @@ void start_service() {
 
 }
 
-void respond_to_gst_event(int message_type, char *jsonmessage) {
+void respond_to_gst_event(int event_type, int message_type, char *jsonmessage, char *jsonposition) {
 
 	LSError lserror;
 	LSErrorInit(&lserror);
@@ -197,7 +197,11 @@ void respond_to_gst_event(int message_type, char *jsonmessage) {
 	int len = 0;
 	char *jsonResponse = 0;
 
+	if (event_type == 1)
 	len = asprintf(&jsonResponse, "{\"gst_message_type\":%d,\"message\":\"%s\"}", message_type, jsonmessage);
+
+	if (event_type == 2)
+	len = asprintf(&jsonResponse, "{\"time\":\"%s\"}", jsonposition);
 
 	LSSubscriptionRespond(serviceHandle, "/get_events", jsonResponse, &lserror);
 

@@ -51,7 +51,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 		$("warning-messages").innerHTML = payload.message;
 	}
 	if (payload.time) {
-		$("position").innerHTML = payload.time;
+		$("position").innerHTML = payload.time.substr(0,10);
 	}
 	if(payload.lastfilename) {
         this.lastRecording = lastfilename;

@@ -129,7 +129,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 	}
 
-	int event_type = 1;
+	int *event_type = 1;
 	respond_to_gst_event(event_type, message_type, jsonmessage);
 
 	if (quit_recording_loop)
@@ -224,7 +224,7 @@ static gboolean get_position (GstElement *pipeline) {
 
   if (gst_element_query_position (pipeline, &fmt, &pos)) {
 	  asprinf(&jsonposition, "%"GST_TIME_FORMAT, GST_TIME_ARGS(pos));
-	  int event_type = 2;
+	  int *event_type = 2;
 	  respond_to_gst_event(jsonposition);
   }
 

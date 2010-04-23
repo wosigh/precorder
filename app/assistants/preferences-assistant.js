@@ -13,8 +13,7 @@ PreferencesAssistant.prototype.setup = function() {
                     {label: $L("8000"), value: 8000},
                     {label: $L("11025"), value: 11025},
 					{label: $L("12000"), value: 12000},
-                    {label: $L("16000"), value: 16000},
-					{label: $L("22050"), value: 22050}
+                    {label: $L("16000"), value: 16000}
                     ]
             },
             this.rateModel = {
@@ -32,7 +31,6 @@ PreferencesAssistant.prototype.setup = function() {
                 label: $L("Bitrate"),
                 labelPlacement: Mojo.Widget.labelPlacementLeft,
                 choices: [
-                    {label: $L("64"), value: 64},
                     {label: $L("96"), value: 96},
                     {label: $L("128"), value: 128}
                     ]

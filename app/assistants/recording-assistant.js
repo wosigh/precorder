@@ -50,7 +50,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.gst_message_type == 4) {
 		$("warning-messages").innerHTML = payload.message;
 	}
-	if (payload.jsonposition) {
+	if (payload.time) {
 		$("position").innerHTML = payload.time;
 	}
 	if(payload.lastfilename) {

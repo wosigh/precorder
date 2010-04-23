@@ -224,7 +224,6 @@ static gboolean get_position (GstElement *pipeline) {
 
   if (gst_element_query_position (pipeline, &fmt, &pos)) {
 	  asprintf(&jsonmessage, "%"GST_TIME_FORMAT, GST_TIME_ARGS(pos));
-	  int event_type = 2;
 	  respond_to_gst_event(message_type, jsonmessage);
   }
 

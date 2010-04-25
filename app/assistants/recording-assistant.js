@@ -144,13 +144,10 @@ RecordingAssistant.prototype.stopFailure = function(response) {
 };
 
 RecordingAssistant.prototype.play = function(event) {
-    var p = {};
-    
-    if(lastRecording)
-        p = {target: "file://" + lastRecording};
+    p = {target: "file://" + lastRecording};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
-        method: 'play',
+        method: 'launch',
         parameters: {
             id: "com.palm.app.streamingmusicplayer",
             params: p

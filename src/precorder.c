@@ -329,8 +329,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
+		// if (jsonmessage) free(jsonmessage);
 		g_timeout_add (200, (GSourceFunc) get_position, pipeline);
-		if (jsonmessage) free(jsonmessage);
 		g_main_loop_run(recording_loop);
 	}
 

@@ -58,10 +58,10 @@ void *record_wrapper(void *ptr) {
 	free(req->opts);
 	free(req);
 
-	//int removed = 0;
-	//clean_dir(DEFAULT_FILE_LOCATION, removed);
-	//if (removed)
-	//	printf("Removed %d 0-length files from %s", removed, DEFAULT_FILE_LOCATION);
+	int removed = 0;
+	clean_dir(DEFAULT_FILE_LOCATION, removed);
+	if (removed)
+		printf("Removed %d 0-length files from %s", removed, DEFAULT_FILE_LOCATION);
 
 }
 

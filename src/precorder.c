@@ -241,8 +241,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	GstBus *bus, *level_bus;
 	gint watch_id;
 
-	// FIXME: does this really belong here? I feel I can probably get this sooner...
-
 	gst_init(NULL, NULL);
 
 	recording_loop = g_main_loop_new(NULL, FALSE);
@@ -268,6 +266,11 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	// Setup file sink
 	fsink = gst_element_factory_make("filesink", "file-sink");
 	g_object_set(G_OBJECT(fsink), "location", opts->file, NULL);
+
+	// FIXME: does this really belong here? I feel I can probably get this sooner...
+	int message_type = 7331;
+	char *jsonmessage = opts->file;
+	respond_to_gst_event(message_type, jsonmessage);
 
 	// Setup voice activation (level checker) and turn on message output
 	vact = gst_element_factory_make("level", "voice-activation");
@@ -327,6 +330,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 		g_timeout_add (200, (GSourceFunc) get_position, pipeline);
+		if (jsonmessage) free(jsonmessage);
 		g_main_loop_run(recording_loop);
 	}
 
@@ -348,10 +352,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 bool stop_recording() {
 
-	int message_type = 7331;
-	char *jsonmessage = opts->file;
-	respond_to_gst_event(message_type, jsonmessage);
-	free(jsonmessage);
 	return gst_element_send_event(pipeline, gst_event_new_eos());
 
 }

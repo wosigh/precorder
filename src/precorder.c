@@ -263,14 +263,14 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	g_object_set(G_OBJECT(aenc), "bitrate", opts->lame_bitrate, NULL);
 	g_object_set(G_OBJECT(aenc), "quality", opts->lame_quality, NULL);
 
+	// Setup file sink
+	fsink = gst_element_factory_make("filesink", "file-sink");
+	g_object_set(G_OBJECT(fsink), "location", opts->file, NULL);
+
 	// FIXME: does this really belong here? I feel I can probably get this sooner...
 	int message_type = 7331;
 	char *jsonmessage = opts->file;
 	respond_to_gst_event(message_type, jsonmessage);
-
-	// Setup file sink
-	fsink = gst_element_factory_make("filesink", "file-sink");
-	g_object_set(G_OBJECT(fsink), "location", jsonmessage, NULL);
 	free(jsonmessage);
 
 	// Setup voice activation (level checker) and turn on message output

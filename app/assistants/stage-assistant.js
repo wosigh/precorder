@@ -67,6 +67,10 @@ StageAssistant.prototype.handleCommand = function (event) {
 				case 'stop':
 					this.controller.delegateToSceneAssistant("stop", "") ;
 					break;
+					
+				case 'play':
+					this.controller.delegateToSceneAssistant("play", "") ;
+					break;
 				
 			 // case Mojo.Menu.pushSupport:
                    // this.controller.pushScene('support');

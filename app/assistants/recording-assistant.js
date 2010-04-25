@@ -51,7 +51,7 @@ RecordingAssistant.prototype.activate = function() {
 };
 
 RecordingAssistant.prototype.resetPosition = function() {
-	$("position").innerHTML = "00:00";
+	$("position").innerHTML = "0:00:00.00";
 }
 
 RecordingAssistant.prototype.eventSuccess = function(payload){
@@ -66,8 +66,6 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	}
 	if(payload.lastfilename) {
         this.lastRecording = lastfilename;
-        this.playModel.disabled = false;
-        this.controller.modelChanged(this.playModel);
     }
 }
 
@@ -132,6 +130,10 @@ RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.cmdMenuModel.items[0].items[0].disabled = false; // record
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Recording Stopped.<br>";
+	if (lastRecording) {
+		this.cmdMenuModel.items[1].items[1].disabled = false;
+		this.controller.modelChanged(this.cmdMenuModel);
+	}
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {
@@ -145,12 +147,12 @@ RecordingAssistant.prototype.play = function(event) {
     var p = {};
     
     if(this.lastRecording)
-        p = {target: "file:///media/internal/recordings/" + this.lastRecording};
+        p = {target: "file://" + this.lastRecording};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
         method: 'play',
         parameters: {
-            id: "com.palm.app.musicplayer",
+            id: "com.palm.app.streamingmusicplayer",
             params: p
         }
     });

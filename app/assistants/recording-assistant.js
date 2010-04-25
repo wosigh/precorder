@@ -65,7 +65,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 		$("position").innerHTML = payload.time.substr(0,10);
 	}
 	if (payload.lastfilename) {
-        this.lastRecording = payload.lastfilename;
+        lastRecording = payload.lastfilename;
     }
 }
 
@@ -130,7 +130,7 @@ RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.cmdMenuModel.items[0].items[0].disabled = false; // record
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Recording Stopped.<br>";
-	if (this.lastRecording) {
+	if (lastRecording) {
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}
@@ -146,7 +146,7 @@ RecordingAssistant.prototype.stopFailure = function(response) {
 RecordingAssistant.prototype.play = function(event) {
     var p = {};
     
-    if(this.lastRecording)
+    if(lastRecording)
         p = {target: "file://" + this.lastRecording};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {

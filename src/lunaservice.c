@@ -197,17 +197,14 @@ void respond_to_gst_event(int message_type, char *jsonmessage) {
 	int len = 0;
 	char *jsonResponse = 0;
 
-	if (message_type == 1337) { // position query response
+	if (message_type == 1337) // position query response
 		len = asprintf(&jsonResponse, "{\"time\":\"%s\"}", jsonmessage);
-	}
 
-	else if (message_type == 7331) { // filename being returned from record method
+	else if (message_type == 7331) // filename being returned from record method
 		len = asprintf(&jsonResponse, "{\"lastfilename\":\"%s\"}", jsonmessage);
-	}
 
-	else {
+	else
 		len = asprintf(&jsonResponse, "{\"gst_message_type\":%d,\"message\":\"%s\"}", message_type, jsonmessage);
-	}
 
 	LSSubscriptionRespond(serviceHandle, "/get_events", jsonResponse, &lserror);
 

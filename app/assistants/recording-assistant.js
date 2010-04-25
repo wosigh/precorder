@@ -64,7 +64,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.time) {
 		$("position").innerHTML = payload.time.substr(0,10);
 	}
-	if(payload.lastfilename) {
+	if (payload.lastfilename) {
         this.lastRecording = payload.lastfilename;
     }
 }
@@ -130,8 +130,8 @@ RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.cmdMenuModel.items[0].items[0].disabled = false; // record
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Recording Stopped.<br>";
-	if (lastRecording) {
-		this.cmdMenuModel.items[1].items[1].disabled = false;
+	if (this.lastRecording) {
+		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}
 };

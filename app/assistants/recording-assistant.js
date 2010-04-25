@@ -65,7 +65,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 		$("position").innerHTML = payload.time.substr(0,10);
 	}
 	if(payload.lastfilename) {
-        this.lastRecording = lastfilename;
+        this.lastRecording = payload.lastfilename;
     }
 }
 

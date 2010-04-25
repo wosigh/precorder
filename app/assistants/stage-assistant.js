@@ -28,7 +28,7 @@ StageAssistant.prototype.setup = function() {
 		]
 	};
 };
-
+ 
 StageAssistant.prototype.handleCommand = function (event) {
     var currentScene = this.controller.activeScene();
 	var stageController =  Mojo.Controller.appController.getActiveStageController()
@@ -59,6 +59,14 @@ StageAssistant.prototype.handleCommand = function (event) {
                 case 'pushPrefs':
                     this.controller.pushScene('preferences');
                     break;
+					
+				case 'record':
+					this.controller.delegateToSceneAssistant("record", "");
+					break;
+					
+				case 'stop':
+					this.controller.delegateToSceneAssistant("stop", "") ;
+					break;
 				
 			 // case Mojo.Menu.pushSupport:
                    // this.controller.pushScene('support');

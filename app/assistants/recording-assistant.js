@@ -5,21 +5,32 @@ RecordingAssistant.prototype.setup = function() {
 	this.record = this.record.bind(this);
     this.stop = this.stop.bind(this);
 	this.play = this.play.bind(this);
+	// this.toggle_vcva = this.toggle_vcva.bind(this);
 	
-	// this.appMenuModel defined in stage-assistant.js
+	// appMenuModel defined in stage-assistant.js
 	this.controller.setupWidget(Mojo.Menu.appMenu, {omitDefaultItems: true}, appMenuModel);
 	
 	// viewMenuModel defined in stage-assistant.js
 	this.controller.setupWidget(Mojo.Menu.viewMenu, {spacerHeight: 0, menuClass:"no-fade"}, viewMenuModel);
+	
+	this.cmdMenuModel = {
+    visible: true,
+    items: [
+        {items:[{label: $L('Record'), iconPath:'images/record.png', command:'record', disabled: false}, {label: $L('Stop'), iconPath:'images/stop.png', command:'stop', disabled: true}]},
+        {items:[{label: $L('vox'), command:'toggle_vox', disabled: true}, {label: $L('play'), command:'play', disabled: true}]}
+    ]
+	};
+	
+	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.cmdMenuModel);
     
-    this.controller.setupWidget('record', {}, this.recordModel = { buttonLabel : $L("Record"), disabled: false });
-    this.controller.listen('record', Mojo.Event.tap, this.record);
+    //this.controller.setupWidget('record', {}, this.recordModel = { buttonLabel : $L("Record"), disabled: false });
+    //this.controller.listen('record', Mojo.Event.tap, this.record);
 			   
-	this.controller.setupWidget('stop', {}, this.stopModel = { buttonLabel : $L("Stop"), disabled: true });
-    this.controller.listen('stop', Mojo.Event.tap, this.stop);
+	//this.controller.setupWidget('stop', {}, this.stopModel = { buttonLabel : $L("Stop"), disabled: true });
+    //this.controller.listen('stop', Mojo.Event.tap, this.stop);
 
-    this.controller.setupWidget('play', {}, this.playModel = { buttonLabel : $L("Play"), disabled: true }); 
-    this.controller.listen('play', Mojo.Event.tap, this.play);
+    //this.controller.setupWidget('play', {}, this.playModel = { buttonLabel : $L("Play"), disabled: true }); 
+    //this.controller.listen('play', Mojo.Event.tap, this.play);
 };
 
 RecordingAssistant.prototype.activate = function() {
@@ -61,7 +72,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 }
 
 RecordingAssistant.prototype.eventFailure = function(response){
-	$("error-messages").innerHTML = "Event subscription failed..." + response.errorText;
+	$("error-messages").innerHTML = "Event subscription failed: " + response.errorText;
 }
 
 RecordingAssistant.prototype.record = function(event) {
@@ -83,20 +94,20 @@ RecordingAssistant.prototype.record = function(event) {
 
 RecordingAssistant.prototype.recordingStarted = function(msg) {
     currentRecording = true;
-	this.recordModel.disabled = true;
-    this.controller.modelChanged(this.recordModel);
-    this.stopModel.disabled = false;
-    this.controller.modelChanged(this.stopModel);
+	this.cmdMenuModel.items[0].items[0].disabled = true; // record button
+    this.controller.modelChanged(this.cmdMenuModel);
+    this.cmdMenuModel.items[0].items[1].disabled = false; // stop button
+    this.controller.modelChanged(this.cmdMenuModel);
     $("internal-messages").innerHTML = "Recording...<br>";
     // start time
 };
 
 RecordingAssistant.prototype.recordFailure = function(response) {
     currentRecording = false;
-	this.recordModel.disabled = false;
-    this.controller.modelChanged(this.recordModel);
-    this.stopModel.disabled = true;
-    this.controller.modelChanged(this.stopModel);
+	this.cmdMenuModel.items[0].items[0].disabled = false; // record
+    this.controller.modelChanged(this.cmdMenuModel);
+    this.cmdMenuModel.items[0].items[1].disabled = true; // stop
+    this.controller.modelChanged(this.cmdMenuModel);
     $("internal-messages").innerHTML = "Recording failed:<br>" + response.errorText;
 };
 
@@ -111,22 +122,22 @@ RecordingAssistant.prototype.stop = function(event) {
 };
 
 RecordingAssistant.prototype.recordingStopping = function(){
-	this.stopModel.disabled = true;
-	this.controller.modelChanged(this.stopModel);
+	this.cmdMenuModel.items[0].items[1].disabled = true; // stop
+	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Saving, please wait...<br>";
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
     currentRecording = false;
-	this.recordModel.disabled = false;
-	this.controller.modelChanged(this.recordModel);
+	this.cmdMenuModel.items[0].items[0].disabled = false; // record
+	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Recording Stopped.<br>";
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {
     currentRecording = false;  // Might as well, can't stop it now anyway
-    this.recordModel.disabled = false;
-	this.controller.modelChanged(this.recordModel);
+    this.cmdMenuModel.items[0].items[0].disabled = false; // record
+	this.controller.modelChanged(this.cmdMenuModel);
     $("internal-messages").innerHTML = "Stop failed (WARNING, THIS SHOULD NEVER HAPPEN):<br>" + response.errorText;
 };
 
@@ -149,7 +160,7 @@ RecordingAssistant.prototype.deactivate = function(event) {
 };
 
 RecordingAssistant.prototype.cleanup = function(event) {
-    this.controller.stopListening('record', Mojo.Event.tap, this.record);
-    this.controller.stopListening('stop', Mojo.Event.tap, this.stop);
-	this.controller.stopListening('play', Mojo.Event.tap, this.play);
+    //this.controller.stopListening('record', Mojo.Event.tap, this.record);
+    //this.controller.stopListening('stop', Mojo.Event.tap, this.stop);
+	//this.controller.stopListening('play', Mojo.Event.tap, this.play);
 };

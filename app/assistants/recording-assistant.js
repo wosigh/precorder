@@ -147,7 +147,7 @@ RecordingAssistant.prototype.play = function(event) {
     var p = {};
     
     if(lastRecording)
-        p = {target: "file://" + this.lastRecording};
+        p = {target: "file://" + lastRecording};
         
     this.controller.serviceRequest('palm://com.palm.applicationManager', {
         method: 'play',

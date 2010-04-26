@@ -52,7 +52,7 @@ RecordingAssistant.prototype.activate = function() {
 
 RecordingAssistant.prototype.resetPosition = function() {
 	$("position").innerHTML = "0:00:00.00";
-};
+}
 
 RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.gst_message_type == 2) {
@@ -67,11 +67,11 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 	if (payload.lastfilename) {
         lastRecording = payload.lastfilename;
     }
-};
+}
 
 RecordingAssistant.prototype.eventFailure = function(response){
 	$("error-messages").innerHTML = "Event subscription failed: " + response.errorText;
-};
+}
 
 RecordingAssistant.prototype.record = function(event) {
 	this.recordingStarted();
@@ -159,9 +159,7 @@ RecordingAssistant.prototype.deactivate = function(event) {
 };
 
 RecordingAssistant.prototype.cleanup = function(event) {
-	if (currentRecording === true) {
-			this.controller.serviceRequest('luna://org.webosinternals.precorder', {
-        	method: 'stop_record'
-    	});
-	}
+    //this.controller.stopListening('record', Mojo.Event.tap, this.record);
+    //this.controller.stopListening('stop', Mojo.Event.tap, this.stop);
+	//this.controller.stopListening('play', Mojo.Event.tap, this.play);
 };

@@ -31,18 +31,20 @@ StageAssistant.prototype.setup = function() {
  
 StageAssistant.prototype.handleCommand = function (event) {
     var currentScene = this.controller.activeScene();
-	var stageController =  Mojo.Controller.appController.getActiveStageController()
+	var stageController =  Mojo.Controller.appController.getActiveStageController();
 	
 	switch(event.type) {
         case Mojo.Event.commandEnable:
             switch (event.command) {
                 case Mojo.Menu.prefsCmd:
-                    if(!currentScene.assistant.prefsMenuDisabled)
-                        event.stopPropagation();
+                    if (!currentScene.assistant.prefsMenuDisabled) {
+						event.stopPropagation();
+					}
                     break;
                 case Mojo.Menu.helpCmd:
-                    if(!currentScene.assistant.helpMenuDisabled)
-                        event.stopPropagation();
+                    if (!currentScene.assistant.helpMenuDisabled) {
+						event.stopPropagation();
+					}
                     break;
             }
             break;

@@ -31,7 +31,6 @@ int is_eos = 0;
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 	bool quit_recording_loop = FALSE;
-	extern int is_eos;
 
 	int len = 0;
 	char *jsonmessage = 0;
@@ -43,6 +42,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 	case GST_MESSAGE_UNKNOWN:
 		break;
 	case GST_MESSAGE_EOS:
+		is_eos = 1;
 		quit_recording_loop = TRUE;
 		break;
 	case GST_MESSAGE_ERROR: {
@@ -228,8 +228,13 @@ static gboolean get_position (GstElement *pipeline) {
   }
 
   if (jsonmessage) free(jsonmessage);
-  /* call me again */
+  if (is_eos == 1) {
+	  is_eos = 0;
+	  return FALSE;
+  }
+  else {
   return TRUE;
+  }
 }
 
 int record_start(PIPELINE_OPTS_t *opts) {
@@ -291,6 +296,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 			NULL
 	);
 
+	//FIXME: should this be here?
+	if (jsonmessage) free(jsonmessage);
+
 	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
 	gst_bus_add_watch(bus, bus_call, recording_loop);
 
@@ -329,7 +337,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
-		// if (jsonmessage) free(jsonmessage);
 		g_timeout_add (200, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
 	}

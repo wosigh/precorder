@@ -94,7 +94,7 @@ RecordingAssistant.prototype.recordSuccess = function(payload) {
 };
 
 RecordingAssistant.prototype.enablePlay = function() {
-	if (lastRecording)
+	if (lastRecording) {
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}

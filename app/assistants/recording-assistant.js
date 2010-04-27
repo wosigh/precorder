@@ -92,6 +92,10 @@ RecordingAssistant.prototype.recordSuccess = function(payload) {
 	if (payload.lastfilename) {
         lastRecording = payload.lastfilename;
     }
+	if (lastRecording) {
+		this.cmdMenuModel.items[1].items[1].disabled = false; // play
+		this.controller.modelChanged(this.cmdMenuModel);
+	}
 };
 
 RecordingAssistant.prototype.recordingStarted = function(msg) {
@@ -134,10 +138,6 @@ RecordingAssistant.prototype.recordingStopped = function(response) {
 	this.cmdMenuModel.items[0].items[0].disabled = false; // record
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Recording Stopped.<br>";
-	if (lastRecording) {
-		this.cmdMenuModel.items[1].items[1].disabled = false; // play
-		this.controller.modelChanged(this.cmdMenuModel);
-	}
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {

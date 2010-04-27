@@ -82,7 +82,7 @@ RecordingAssistant.prototype.record = function(event) {
             voice_activation: prefs.voice_activation,
             filename: filename
         },
-		onSuccess: this.recordSuccess;
+		onSuccess: this.recordSuccess,
 		onFailure: this.recordFailure,
         onError: this.recordFailure
     });
@@ -92,7 +92,7 @@ RecordingAssistant.prototype.recordSuccess = function(payload) {
 	if (payload.lastfilename) {
         lastRecording = payload.lastfilename;
     }
-}
+};
 
 RecordingAssistant.prototype.recordingStarted = function(msg) {
     currentRecording = true;

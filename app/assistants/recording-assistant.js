@@ -41,7 +41,7 @@ RecordingAssistant.prototype.activate = function() {
 	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
         	method: 'get_events',
 			parameters: {
-			subscribe: true
+				subscribe: true
         	},
         	onSuccess: this.eventSuccess,
         	onFailure: this.eventFailure,
@@ -90,9 +90,7 @@ RecordingAssistant.prototype.record = function(event) {
 
 RecordingAssistant.prototype.recordSuccess = function(payload) {
 	if (payload.lastfilename) {
-        lastRecording = payload.lastfilename;
-    }
-	if (lastRecording) {
+		lastRecording = payload.lastfilename;
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}

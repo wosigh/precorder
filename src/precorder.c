@@ -291,9 +291,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 			NULL
 	);
 
-	//FIXME: should this be here?
-	if (jsonmessage) free(jsonmessage);
-
 	bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
 	gst_bus_add_watch(bus, bus_call, recording_loop);
 

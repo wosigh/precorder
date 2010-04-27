@@ -47,7 +47,7 @@ void *record_wrapper(void *ptr) {
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":true}", &lserror);
 			asprintf(&jsonResponse, "{\"returnValue\":true, \"lastfilename\":\"%s\"}", req->opts->file);
 			LSMessageReply(pub_bus, req->jsonmessage, jsonResponse, &lserror);
-			free(jsonRepsonse);
+			free(jsonResponse);
 		}
 		else
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false}", &lserror);

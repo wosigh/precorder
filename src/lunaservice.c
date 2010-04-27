@@ -41,8 +41,14 @@ void *record_wrapper(void *ptr) {
 
 		pthread_mutex_unlock(&recording_mutex);
 
-		if (ret==0)
+		char *jsonResponse = 0;
+
+		if (ret==0) {
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":true}", &lserror);
+			asprintf(&jsonResponse, "{\"returnValue\":true, \"lastfilename\":\"%s\"}", req->opts->file);
+			LSMessageReply(pub_bus, req->jsonmessage, jsonResponse, &lserror);
+			free(jsonRepsonse);
+		}
 		else
 			LSMessageReply(pub_bus, req->jsonmessage, "{\"returnValue\":false}", &lserror);
 		LSMessageUnref(req->jsonmessage);
@@ -199,9 +205,6 @@ void respond_to_gst_event(int message_type, char *jsonmessage) {
 
 	if (message_type == 1337) // position query response
 		len = asprintf(&jsonResponse, "{\"time\":\"%s\"}", jsonmessage);
-
-	else if (message_type == 7331) // filename being returned from record method
-		len = asprintf(&jsonResponse, "{\"lastfilename\":\"%s\"}", jsonmessage);
 
 	else
 		len = asprintf(&jsonResponse, "{\"gst_message_type\":%d,\"message\":\"%s\"}", message_type, jsonmessage);

@@ -86,11 +86,15 @@ RecordingAssistant.prototype.record = function(event) {
 		onFailure: this.recordFailure,
         onError: this.recordFailure
     });
+	this.enablePlay();
 };
 
 RecordingAssistant.prototype.recordSuccess = function(payload) {
-	if (payload.lastfilename) {
 		lastRecording = payload.lastfilename;
+};
+
+RecordingAssistant.prototype.enablePlay = function() {
+	if (lastRecording)
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}

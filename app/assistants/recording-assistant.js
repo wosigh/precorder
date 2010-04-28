@@ -5,6 +5,8 @@ RecordingAssistant.prototype.setup = function() {
 	this.record = this.record.bind(this);
     this.stop = this.stop.bind(this);
 	this.play = this.play.bind(this);
+	this.recordSuccess = this.recordSuccess.bind(this);
+	
 	// this.toggle_vcva = this.toggle_vcva.bind(this);
 	
 	// appMenuModel defined in stage-assistant.js
@@ -86,14 +88,12 @@ RecordingAssistant.prototype.record = function(event) {
 		onFailure: this.recordFailure,
         onError: this.recordFailure
     });
-	this.enablePlay();
 };
 
 RecordingAssistant.prototype.recordSuccess = function(payload) {
+	if (payload.lastfilename) {
 		lastRecording = payload.lastfilename;
-};
-
-RecordingAssistant.prototype.enablePlay = function() {
+	}
 	if (lastRecording) {
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);

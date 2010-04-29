@@ -7,8 +7,6 @@ RecordingAssistant.prototype.setup = function() {
 	this.play = this.play.bind(this);
 	this.recordSuccess = this.recordSuccess.bind(this);
 	
-	// this.toggle_vcva = this.toggle_vcva.bind(this);
-	
 	// appMenuModel defined in stage-assistant.js
 	this.controller.setupWidget(Mojo.Menu.appMenu, {omitDefaultItems: true}, appMenuModel);
 	
@@ -19,20 +17,11 @@ RecordingAssistant.prototype.setup = function() {
     visible: true,
     items: [
         {items:[{label: $L('Record'), iconPath:'images/record.png', command:'record', disabled: false}, {label: $L('Stop'), iconPath:'images/stop.png', command:'stop', disabled: true}]},
-        {items:[{label: $L('vox'), command:'toggle_vox', disabled: true}, {label: $L('play'), command:'play', disabled: true}]}
+        {items:[{label: $L('vox'), command:'toggle_vox', disabled: true}, {label: $L('play'), iconPath:'images/play.png', command:'play', disabled: true}]}
     ]
 	};
 	
 	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.cmdMenuModel);
-    
-    //this.controller.setupWidget('record', {}, this.recordModel = { buttonLabel : $L("Record"), disabled: false });
-    //this.controller.listen('record', Mojo.Event.tap, this.record);
-			   
-	//this.controller.setupWidget('stop', {}, this.stopModel = { buttonLabel : $L("Stop"), disabled: true });
-    //this.controller.listen('stop', Mojo.Event.tap, this.stop);
-
-    //this.controller.setupWidget('play', {}, this.playModel = { buttonLabel : $L("Play"), disabled: true }); 
-    //this.controller.listen('play', Mojo.Event.tap, this.play);
 };
 
 RecordingAssistant.prototype.activate = function() {
@@ -53,7 +42,7 @@ RecordingAssistant.prototype.activate = function() {
 };
 
 RecordingAssistant.prototype.resetPosition = function() {
-	$("position").innerHTML = "0:00:00.00";
+	$("position").innerHTML = "0:00:00";
 };
 
 RecordingAssistant.prototype.eventSuccess = function(payload){
@@ -64,7 +53,7 @@ RecordingAssistant.prototype.eventSuccess = function(payload){
 		$("warning-messages").innerHTML = payload.message;
 	}
 	if (payload.time) {
-		$("position").innerHTML = payload.time.substr(0,10);
+		$("position").innerHTML = payload.time.substr(0,7);
 	}
 };
 

@@ -33,6 +33,7 @@ gst-inspect > /dev/null
 
 # Stop any existing service
 /sbin/stop ${PID} || true
+killall -9 ${PID} || true
 
 # Install the upstart script
 rm -f /etc/event.d/${PID}

@@ -361,6 +361,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 bool stop_recording() {
 
 	if(stop_now == 1) {
+		is_eos = 1;
 		g_main_loop_quit(recording_loop);
 		return TRUE;
 	}

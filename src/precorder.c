@@ -27,6 +27,7 @@
 GstElement *pipeline;
 gdouble rms;
 int is_eos = 0;
+int stop_now = 0;
 
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
@@ -216,6 +217,10 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
   return TRUE;
 }
 
+void underrun_check (GstElement *pipeline) {
+	stop_now = 1;
+}
+
 static gboolean get_position (GstElement *pipeline) {
   GstFormat fmt = GST_FORMAT_TIME;
   gint64 pos;
@@ -241,7 +246,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	int ret = -1;
 
-	GstElement *psrc, *vact, *aenc, *fsink;
+	GstElement *psrc, *vact, *aenc, *fsink, *queue;
 	GstCaps *acaps;
 	GstBus *bus, *level_bus;
 	gint watch_id;
@@ -263,6 +268,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		g_object_set(G_OBJECT(psrc), "device", "pcm_input", NULL);
 	}
 
+	// Setup queue element
+	queue = gst_element_factory_make("queue", "queue");
+
 	// Setup audio encoder
 	aenc = gst_element_factory_make("lame", "audio-encoder");
 	g_object_set(G_OBJECT(aenc), "bitrate", opts->lame_bitrate, NULL);
@@ -273,11 +281,11 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	g_object_set(G_OBJECT(fsink), "location", opts->file, NULL);
 
 	// Setup voice activation (level checker) and turn on message output
-	vact = gst_element_factory_make("level", "voice-activation");
-	g_object_set (G_OBJECT (vact), "message", TRUE, NULL);
+	// vact = gst_element_factory_make("level", "voice-activation");
+	// g_object_set (G_OBJECT (vact), "message", TRUE, NULL);
 
 	// Bundle up elements into a bin
-	gst_bin_add_many(GST_BIN(pipeline), psrc, vact, aenc, fsink, NULL);
+	gst_bin_add_many(GST_BIN(pipeline), psrc, queue, aenc, fsink, NULL);
 
 	// Build audio caps
 	acaps = gst_caps_new_simple(
@@ -326,8 +334,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	}
 	else {
 		// Link elements without gstlevel
-		gst_element_link_filtered(psrc, aenc, acaps);
-		gst_element_link(aenc, fsink);
+		gst_element_link_filtered(psrc, queue, acaps);
+		gst_element_link_many(queue, aenc, fsink);
+		g_signal_connect(queue, "underrun", G_CALLBACK(underrun_check), pipeline);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
@@ -351,6 +360,11 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 bool stop_recording() {
 
-	return gst_element_send_event(pipeline, gst_event_new_eos());
-
+	if(stop_now == 1) {
+		g_main_loop_quit(recording_loop);
+		return TRUE;
+	}
+	else {
+		return gst_element_send_event(pipeline, gst_event_new_eos());
+	}
 }

@@ -27,7 +27,7 @@
 GstElement *pipeline;
 gdouble rms;
 int is_eos = 0;
-int stop_now = 0;
+int stop_abrupt = 0;
 int quit_now = 0;
 
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
@@ -218,10 +218,6 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
   return TRUE;
 }
 
-void underrun_check (GstElement *pipeline) {
-	stop_now = 1;
-}
-
 static gboolean active_quit (GstElement *pipeline) {
 	if (quit_now == 1) {
 		g_main_loop_quit(recording_loop);
@@ -258,7 +254,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	int ret = -1;
 
-	GstElement *psrc, *vact, *aenc, *fsink, *queue;
+	GstElement *psrc, *vact, *aenc, *fsink;
 	GstCaps *acaps;
 	GstBus *bus, *level_bus;
 	gint watch_id;
@@ -275,13 +271,11 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	if (opts->source_device == 1) {
 		g_object_set(G_OBJECT(psrc), "device", "pcm_output.monitor", NULL);
+		stop_abrupt = 1;
 	}
 	else {
 		g_object_set(G_OBJECT(psrc), "device", "pcm_input", NULL);
 	}
-
-	// Setup queue element
-	queue = gst_element_factory_make("queue", "queue");
 
 	// Setup audio encoder
 	aenc = gst_element_factory_make("lame", "audio-encoder");
@@ -297,7 +291,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	// g_object_set (G_OBJECT (vact), "message", TRUE, NULL);
 
 	// Bundle up elements into a bin
-	gst_bin_add_many(GST_BIN(pipeline), psrc, queue, aenc, fsink, NULL);
+	gst_bin_add_many(GST_BIN(pipeline), psrc, aenc, fsink, NULL);
 
 	// Build audio caps
 	acaps = gst_caps_new_simple(
@@ -346,9 +340,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	}
 	else {
 		// Link elements without gstlevel
-		gst_element_link_filtered(psrc, queue, acaps);
-		gst_element_link_many(queue, aenc, fsink);
-		g_signal_connect(queue, "underrun", G_CALLBACK(underrun_check), pipeline);
+		gst_element_link_filtered(psrc, aenc, acaps);
+		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
 		g_timeout_add_seconds (5, (GSourceFunc) active_quit, pipeline);
 		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
@@ -373,7 +366,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 bool stop_recording() {
 
-	if(stop_now == 1) {
+	if(stop_abrupt == 1) {
+		stop_abrupt = 0;
 		is_eos = 1;
 		quit_now = 1;
 		return TRUE;

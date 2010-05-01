@@ -28,6 +28,7 @@ GstElement *pipeline;
 gdouble rms;
 int is_eos = 0;
 int stop_now = 0;
+int quit_now = 0;
 
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
@@ -221,6 +222,17 @@ void underrun_check (GstElement *pipeline) {
 	stop_now = 1;
 }
 
+void idle_quit (GstElement *pipeline) {
+	if (quit_now == 1) {
+		g_main_loop_quit(recording_loop);
+		g_main_context_wakeup(recording_context);
+		return FALSE;
+	}
+	else {
+		return TRUE;
+	}
+}
+
 static gboolean get_position (GstElement *pipeline) {
   GstFormat fmt = GST_FORMAT_TIME;
   gint64 pos;
@@ -338,6 +350,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_many(queue, aenc, fsink);
 		g_signal_connect(queue, "underrun", G_CALLBACK(underrun_check), pipeline);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
+		g_idle_add ((GSourceFunc) idle_quit, pipeline);
 		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
 	}
@@ -362,8 +375,7 @@ bool stop_recording() {
 
 	if(stop_now == 1) {
 		is_eos = 1;
-		g_main_loop_quit(recording_loop);
-		g_main_context_wakeup(recording_context);
+		quit_now = 1;
 		return TRUE;
 	}
 	else {

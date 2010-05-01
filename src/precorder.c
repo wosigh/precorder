@@ -221,7 +221,8 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
 static gboolean active_quit (GstElement *pipeline) {
 	if (quit_now == 1) {
 		quit_now = 0;
-		g_main_destroy(recording_loop);
+		gst_element_set_state(pipeline, GST_STATE_NULL);
+		g_main_loop_quit(recording_loop);
 		g_main_loop_unref(recording_loop);
 		return FALSE;
 	}

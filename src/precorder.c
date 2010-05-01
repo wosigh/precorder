@@ -222,7 +222,7 @@ void underrun_check (GstElement *pipeline) {
 	stop_now = 1;
 }
 
-void idle_quit (GstElement *pipeline) {
+static gboolean idle_quit (GstElement *pipeline) {
 	if (quit_now == 1) {
 		g_main_loop_quit(recording_loop);
 		g_main_context_wakeup(recording_context);

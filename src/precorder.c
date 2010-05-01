@@ -222,7 +222,7 @@ void underrun_check (GstElement *pipeline) {
 	stop_now = 1;
 }
 
-static gboolean idle_quit (GstElement *pipeline) {
+static gboolean active_quit (GstElement *pipeline) {
 	if (quit_now == 1) {
 		g_main_loop_quit(recording_loop);
 		g_main_context_wakeup(recording_context);
@@ -350,7 +350,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_many(queue, aenc, fsink);
 		g_signal_connect(queue, "underrun", G_CALLBACK(underrun_check), pipeline);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
-		g_idle_add ((GSourceFunc) idle_quit, pipeline);
+		g_timeout_add_seconds (5, (GSourceFunc) active_quit, pipeline);
 		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
 	}

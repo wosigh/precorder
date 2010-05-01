@@ -253,7 +253,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	gst_init(NULL, NULL);
 
-	recording_loop = g_main_loop_new(NULL, FALSE);
+	recording_loop = g_main_loop_new(recording_context, FALSE);
 
 	// Create pipeline
 	pipeline = gst_pipeline_new("precorder");
@@ -363,6 +363,7 @@ bool stop_recording() {
 	if(stop_now == 1) {
 		is_eos = 1;
 		g_main_loop_quit(recording_loop);
+		g_main_context_wakeup(recording_context);
 		return TRUE;
 	}
 	else {

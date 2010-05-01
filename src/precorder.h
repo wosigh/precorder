@@ -67,6 +67,7 @@ typedef struct {
 } PIPELINE_OPTS_t;
 
 GMainLoop *recording_loop;
+GMainContext *recording_context;
 
 int record_video(PIPELINE_OPTS_t *opts);
 bool stop_recording();

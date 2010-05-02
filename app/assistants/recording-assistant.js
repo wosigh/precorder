@@ -1,5 +1,5 @@
 function RecordingAssistant(){
-};
+}
 
 RecordingAssistant.prototype.setup = function() {
 	this.record = this.record.bind(this);
@@ -118,7 +118,7 @@ RecordingAssistant.prototype.stop = function(event) {
 	this.recordingStopping();
 	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
 		method: 'stop_record',
-		onSuccess: setTimeout("this.recordingStopped", 3000),
+		onSuccess: function() { setTimeout(this.recordingStopped, 3000); },
 		onFailure: this.stopFailure,
 		onError: this.stopFailure
 	});

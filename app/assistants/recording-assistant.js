@@ -87,13 +87,19 @@ RecordingAssistant.prototype.recordSuccess = function(payload) {
 		this.cmdMenuModel.items[1].items[1].disabled = false; // play
 		this.controller.modelChanged(this.cmdMenuModel);
 	}
+	currentRecording = false;
+	this.cmdMenuModel.items[0].items[0].disabled = false; // record
+	this.controller.modelChanged(this.cmdMenuModel);
+	$("internal-messages").innerHTML = "Recording Stopped.<br>";
 };
 
 RecordingAssistant.prototype.recordingStarted = function(msg) {
     currentRecording = true;
-	this.cmdMenuModel.items[0].items[0].disabled = true; // record button
+	this.cmdMenuModel.items[1].items[1].disabled = true; // disable play button
+	this.controller.modelChanged(this.cmdMenuModel);
+	this.cmdMenuModel.items[0].items[0].disabled = true; // disable record button
     this.controller.modelChanged(this.cmdMenuModel);
-    this.cmdMenuModel.items[0].items[1].disabled = false; // stop button
+    this.cmdMenuModel.items[0].items[1].disabled = false; // enable stop button
     this.controller.modelChanged(this.cmdMenuModel);
     $("internal-messages").innerHTML = "Recording...<br>";
     // start time
@@ -128,10 +134,6 @@ RecordingAssistant.prototype.recordingStopping = function(){
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
-    currentRecording = false;
-	this.cmdMenuModel.items[0].items[0].disabled = false; // record
-	this.controller.modelChanged(this.cmdMenuModel);
-	$("internal-messages").innerHTML = "Recording Stopped.<br>";
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {

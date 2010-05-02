@@ -128,12 +128,12 @@ RecordingAssistant.prototype.recordingStopping = function(){
 	this.cmdMenuModel.items[0].items[1].disabled = true; // stop
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Saving, please wait...<br>";
-	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
-		method: 'killa_hax'
-	});
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
+	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
+		method: 'killa_hax'
+	});
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {

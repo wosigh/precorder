@@ -17,8 +17,9 @@ rm -f $MP3LAMESYM
 rm -f $GSTLAMESYM
 rm -f $GSTLEVELSYM
 
-# Stop the service
-/sbin/stop ${PID}
+# Stop any existing service
+/sbin/stop ${PID} || true
+killall -9 ${PID} || true
 
 # Remove the upstart script
 rm -f /etc/event.d/${PID}

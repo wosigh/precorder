@@ -129,8 +129,9 @@ bool stop_record(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 
 	bool ret = stop_recording();
 
-	if (ret)
+	if (ret){
 		LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":true}", &lserror);
+	}
 	else
 		LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":false}", &lserror);
 
@@ -138,8 +139,30 @@ bool stop_record(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 		LSErrorPrint(&lserror, stderr);
 		LSErrorFree(&lserror);
 	}
-
+	
 	return TRUE;
+
+}
+
+bool killa_hax(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
+
+        LSError lserror;
+        LSErrorInit(&lserror);
+
+        bool ret = ninja_killa_hax();
+
+        if (ret==0){
+                LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":true}", &lserror);
+        }
+        else
+                LSMessageReply(lshandle, jsonmessage, "{\"returnValue\":false}", &lserror);
+
+        if (LSErrorIsSet(&lserror)) {
+                LSErrorPrint(&lserror, stderr);
+                LSErrorFree(&lserror);
+        }
+        
+        return TRUE;
 
 }
 
@@ -167,6 +190,7 @@ bool get_events(LSHandle* lshandle, LSMessage *jsonmessage, void *ctx) {
 LSMethod methods[] = {
 		{"start_record",	start_record},
 		{"stop_record",		stop_record},
+		{"killa_hax",		killa_hax},
 		{"get_events",		get_events},
 		{0,0}
 };

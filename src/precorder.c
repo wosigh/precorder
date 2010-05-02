@@ -221,10 +221,7 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
 static gboolean active_quit (GstElement *pipeline) {
 	if (quit_now == 1) {
 		quit_now = 0;
-		gst_element_send_event(pipeline, gst_event_new_eos());
-		gst_element_set_state(pipeline, GST_STATE_NULL);
 		g_main_loop_quit(recording_loop);
-		g_main_loop_unref(recording_loop);
 		return FALSE;
 	}
 	else {
@@ -245,8 +242,8 @@ static gboolean get_position (GstElement *pipeline) {
 
   if (jsonmessage) free(jsonmessage);
   if (is_eos == 1) {
-	  is_eos = 0;
-	  return FALSE;
+	is_eos = 0;
+	return FALSE;
   }
   else {
   return TRUE;
@@ -346,7 +343,7 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
-		g_timeout_add_seconds (5, (GSourceFunc) active_quit, pipeline);
+		g_timeout_add_seconds (1, (GSourceFunc) active_quit, pipeline);
 		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
 		g_main_loop_run(recording_loop);
 	}
@@ -360,6 +357,40 @@ int record_start(PIPELINE_OPTS_t *opts) {
 	gst_element_set_state(pipeline, GST_STATE_NULL);
 
 	gst_object_unref(GST_OBJECT (pipeline));
+
+	ret = 0;
+
+	return ret;
+
+}
+
+int ninja_killa_hax() {
+
+	int ret = -1;
+	GstElement *psrc, *asink;
+	GstElement *pipeline_killa;
+	
+	// Create pipeline
+	pipeline_killa = gst_pipeline_new("killa");
+
+	// Setup pulse source
+	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
+	g_object_set(G_OBJECT(psrc), "device", "pcm_input", NULL);
+	g_object_set(G_OBJECT(psrc), "num-buffers", 1, NULL);
+
+	// Setup alsa sink
+	asink = gst_element_factory_make("alsasink", "alsa-sink");
+
+	// Bundle up elements into a bin
+	gst_bin_add_many(GST_BIN(pipeline_killa), psrc, asink, NULL);
+	
+	// Link elements
+	gst_element_link(psrc, asink);
+	gst_element_set_state(pipeline_killa, GST_STATE_PLAYING);
+	sleep (3);
+	gst_element_set_state(pipeline_killa, GST_STATE_NULL);
+
+	gst_object_unref(GST_OBJECT (pipeline_killa));
 
 	ret = 0;
 

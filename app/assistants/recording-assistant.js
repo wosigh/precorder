@@ -109,19 +109,22 @@ RecordingAssistant.prototype.recordFailure = function(response) {
 };
 
 RecordingAssistant.prototype.stop = function(event) {
-		this.recordingStopping();
-		this.controller.serviceRequest('luna://org.webosinternals.precorder', {
-        	method: 'stop_record',
-        	onSuccess: this.recordingStopped,
-        	onFailure: this.stopFailure,
-        	onError: this.stopFailure
-    	});
+	this.recordingStopping();
+	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
+		method: 'stop_record',
+		onSuccess: this.recordingStopped,
+		onFailure: this.stopFailure,
+		onError: this.stopFailure
+	});
 };
 
 RecordingAssistant.prototype.recordingStopping = function(){
 	this.cmdMenuModel.items[0].items[1].disabled = true; // stop
 	this.controller.modelChanged(this.cmdMenuModel);
 	$("internal-messages").innerHTML = "Saving, please wait...<br>";
+	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
+		method: 'killa_hax'
+	});
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {

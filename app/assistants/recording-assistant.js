@@ -118,7 +118,7 @@ RecordingAssistant.prototype.stop = function(event) {
 	this.recordingStopping();
 	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
 		method: 'stop_record',
-		onSuccess: this.recordingStopped,
+		onSuccess: setTimeout("this.recordingStopped", 3000),
 		onFailure: this.stopFailure,
 		onError: this.stopFailure
 	});
@@ -131,6 +131,7 @@ RecordingAssistant.prototype.recordingStopping = function(){
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
+	$("internal-messages").innerHTML = "Killing pipeline, just a moment...<br>";
 	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
 		method: 'killa_hax'
 	});

@@ -102,7 +102,6 @@ RecordingAssistant.prototype.recordingStarted = function(msg) {
     this.cmdMenuModel.items[0].items[1].disabled = false; // enable stop button
     this.controller.modelChanged(this.cmdMenuModel);
     $("internal-messages").innerHTML = "Recording...<br>";
-    // start time
 };
 
 RecordingAssistant.prototype.recordFailure = function(response) {
@@ -118,7 +117,6 @@ RecordingAssistant.prototype.stop = function(event) {
 	this.recordingStopping();
 	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
 		method: 'stop_record',
-		onSuccess: function() { setTimeout(this.recordingStopped, 3000); },
 		onFailure: this.stopFailure,
 		onError: this.stopFailure
 	});
@@ -131,10 +129,6 @@ RecordingAssistant.prototype.recordingStopping = function(){
 };
 
 RecordingAssistant.prototype.recordingStopped = function(response) {
-	$("internal-messages").innerHTML = "Killing pipeline, just a moment...<br>";
-	this.controller.serviceRequest('luna://org.webosinternals.precorder', {
-		method: 'killa_hax'
-	});
 };
 
 RecordingAssistant.prototype.stopFailure = function(response) {

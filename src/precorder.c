@@ -24,8 +24,8 @@
 #include "precorder.h"
 #include "luna.h"
 
-GstElement *pipeline;
 gdouble rms;
+GstElement *pipeline, *vact, *fsink, *psrc, *fsrc, *aenc;
 int is_eos = 0;
 int stop_abrupt = 0;
 int quit_now = 0;
@@ -218,9 +218,15 @@ gboolean message_handler (GstBus * bus, GstMessage * message, gpointer data)
   return TRUE;
 }
 
-static gboolean active_quit (GstElement *pipeline) {
+static gboolean active_quit () {
 	if (quit_now == 1) {
 		quit_now = 0;
+		gst_element_set_state(psrc, GST_STATE_PAUSED);
+		gst_bin_remove(GST_BIN(pipeline), psrc);
+		gst_bin_add(GST_BIN(pipeline), fsrc);
+		gst_element_link(fsrc, aenc);
+		gst_element_set_state(psrc, GST_STATE_PLAYING);
+		gst_element_send_event(pipeline, gst_event_new_eos());
 		g_main_loop_quit(recording_loop);
 		return FALSE;
 	}
@@ -229,7 +235,7 @@ static gboolean active_quit (GstElement *pipeline) {
 	}
 }
 
-static gboolean get_position (GstElement *pipeline) {
+static gboolean get_position () {
   GstFormat fmt = GST_FORMAT_TIME;
   gint64 pos;
   int message_type = 1337;
@@ -254,7 +260,6 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	int ret = -1;
 
-	GstElement *psrc, *vact, *aenc, *fsink;
 	GstCaps *acaps;
 	GstBus *bus, *level_bus;
 	gint watch_id;
@@ -265,6 +270,9 @@ int record_start(PIPELINE_OPTS_t *opts) {
 
 	// Create pipeline
 	pipeline = gst_pipeline_new("precorder");
+
+	// Setup fake source
+	fsrc = gst_element_factory_make("fakesrc", "fake-source");
 
 	// Setup pulse source
 	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
@@ -343,8 +351,8 @@ int record_start(PIPELINE_OPTS_t *opts) {
 		gst_element_link_filtered(psrc, aenc, acaps);
 		gst_element_link(aenc, fsink);
 		gst_element_set_state(pipeline, GST_STATE_PLAYING);
-		g_timeout_add_seconds (1, (GSourceFunc) active_quit, pipeline);
-		g_timeout_add_seconds (1, (GSourceFunc) get_position, pipeline);
+		g_timeout_add_seconds (5,(GSourceFunc) active_quit, NULL);
+		g_timeout_add_seconds (1, (GSourceFunc) get_position, NULL);
 		g_main_loop_run(recording_loop);
 	}
 
@@ -367,14 +375,14 @@ int record_start(PIPELINE_OPTS_t *opts) {
 int ninja_killa_hax() {
 
 	int ret = -1;
-	GstElement *psrc, *asink;
+	GstElement *pulsesrc, *asink;
 	GstElement *pipeline_killa;
 	
 	// Create pipeline
 	pipeline_killa = gst_pipeline_new("killa");
 
 	// Setup pulse source
-	psrc = gst_element_factory_make("pulsesrc", "pulse-source");
+	pulsesrc = gst_element_factory_make("pulsesrc", "pulse-source");
 	g_object_set(G_OBJECT(psrc), "device", "pcm_input", NULL);
 	g_object_set(G_OBJECT(psrc), "num-buffers", 1, NULL);
 
@@ -382,10 +390,10 @@ int ninja_killa_hax() {
 	asink = gst_element_factory_make("alsasink", "alsa-sink");
 
 	// Bundle up elements into a bin
-	gst_bin_add_many(GST_BIN(pipeline_killa), psrc, asink, NULL);
+	gst_bin_add_many(GST_BIN(pipeline_killa), pulsesrc, asink, NULL);
 	
 	// Link elements
-	gst_element_link(psrc, asink);
+	gst_element_link(pulsesrc, asink);
 	gst_element_set_state(pipeline_killa, GST_STATE_PLAYING);
 	sleep (3);
 	gst_element_set_state(pipeline_killa, GST_STATE_NULL);
